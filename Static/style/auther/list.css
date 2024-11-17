@@ -1,0 +1,113 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: Left;
+  color: #333;
+  margin-top: 20px;
+}
+
+/* Định dạng cho container */
+.container {
+  width: 70%;
+  margin: 0 auto;
+  padding: 30px;
+  margin-top: 40px;
+  background-color: #ffffff; /* Màu nền cho vùng chứa */
+  border-radius: 10px;
+  border: 2px solid #ddd;
+}
+
+/* Định dạng thanh tìm kiếm */
+.search-bar {
+  display: flex;
+  justify-content: left;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  width: 300px;
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.search-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Định dạng bảng */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+table th {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+table td img {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+}
+
+button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 5px;
+}
+
+/* Định dạng cho các button */
+button.blue {
+  background-color: #007bff;
+  color: white;
+}
+
+button.blue:hover {
+  background-color: #0056b3;
+}
+
+button.yellow {
+  background-color: #ffc107;
+  color: black;
+}
+
+button.yellow:hover {
+  background-color: #e0a800;
+}
+
+button.red {
+  background-color: #dc3545;
+  color: white;
+}
+
+button.red:hover {
+  background-color: #c82333;
+}

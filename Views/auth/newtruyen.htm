@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BOOKHUB</title>
+    <link rel="stylesheet" href="/Static/style/index/dropdown.css" />
+    <link rel="stylesheet" href="/Static/style/auther/homeauth.css" />
+    <link rel="stylesheet" href="/Static/style/auther/navauth.css" />
+    <link rel="stylesheet" href="/Static/style/auther/newtruyen.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <nav class="navbar">
+        <li class="logo">
+          <a href="/Views/homepage/index.html">
+            <img src="/Static/imagines/logo.png" alt="Logo" class="nav-logo" />
+          </a>
+        </li>
+        <li class="dropdown">
+          <a href="#"> <i class="fa-solid fa-user"></i> Tài Khoản </a>
+          <ul class="dropdown-menu">
+            <li><a href="/Views/homepage/login.html">Đăng Xuất</a></li>
+            <li><a href="/Views/auth/newtruyen.htm">Thêm Truyện Mới</a></li>
+            <li><a href="/Views/auth/newchap.html">Thêm Bản Thảo</a></li>
+            <li><a href="/Views/auth/listtruyen.html">Danh Sách Truyện</a></li>
+          </ul>
+        </li>
+      </nav>
+    </header>
+    <!-- Nội dung chính -->
+    <div class="form-container">
+      <form>
+        <div class="form-group">
+          <label for="ten-truyen">Tên truyện</label>
+          <input
+            type="text"
+            id="ten-truyen"
+            name="ten-truyen"
+            placeholder="Nhập tên truyện"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="gioi-thieu">Giới thiệu</label>
+          <textarea
+            id="gioi-thieu"
+            name="gioi-thieu"
+            placeholder="Nhập giới thiệu"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="the-loai">Thể loại</label>
+          <select id="the-loai" name="the-loai">
+            <option value="" disabled selected>Vui lòng chọn</option>
+            <option value="hanh-dong">Hành động</option>
+            <option value="lang-man">Lãng mạn</option>
+            <option value="kinh-di">Kinh dị</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="luu-phai">Lưu phái</label>
+          <select id="luu-phai" name="luu-phai">
+            <option value="" disabled selected>Vui lòng chọn</option>
+            <option value="kiem-hiep">Kiếm hiệp</option>
+            <option value="tien-hiep">Tiên hiệp</option>
+            <option value="vo-hiep">Võ hiệp</option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </body>
+  <!-- Link JavaScript -->
+  <script src="/Static/smooth/dropdown.js"></script>
+</html>

@@ -1,0 +1,67 @@
+/* Container */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Định dạng chung cho form-container */
+.form-container {
+  max-width: 1000px;
+  margin: 50px auto; /* Căn giữa trên màn hình */
+  padding: 20px;
+  background-color: #f9f9f9; /* Màu nền nhạt */
+  border: 1px solid #ddd; /* Viền mỏng */
+  border-radius: 8px; /* Góc bo tròn */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+}
+
+/* Định dạng các nhóm form-group */
+.form-group {
+  margin-bottom: 20px; /* Khoảng cách giữa các nhóm */
+}
+
+/* Định dạng nhãn (label) */
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px; /* Khoảng cách với input/textarea */
+  font-size: 14px;
+  color: #333;
+}
+
+/* Định dạng select */
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  background-color: #fff;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-group select:focus {
+  border-color: #007bff; /* Màu viền khi focus */
+}
+
+/* Định dạng textarea */
+.form-group textarea {
+  width: 100%;
+  height: 100px; /* Chiều cao mặc định */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  background-color: #fff;
+  outline: none;
+  resize: vertical; /* Người dùng có thể chỉnh chiều cao */
+  transition: border-color 0.3s ease;
+}
+
+.form-group textarea:focus {
+  border-color: #007bff; /* Màu viền khi focus */
+}

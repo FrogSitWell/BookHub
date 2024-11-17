@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý thể loại</title>
+    <link rel="stylesheet" href="/Static/style/admin/theloai.css" />
+  </head>
+  <body>
+    <div class="header">
+      <p>Xin chào: admin</p>
+      <a href="/Views/homepage/login.html" class="logout">Đăng xuất</a>
+    </div>
+
+    <nav class="navbar">
+      <a href="/Views/admin/index1.html">Trang chủ</a>
+      <a href="/Views/admin/theloai.html">Quản lý thể loại</a>
+      <a href="/Views/admin/user.html">Quản lý user</a>
+      <a href="/Views/admin/slide.html">Quản lý Slide</a>
+    </nav>
+
+    <div class="container">
+      <div class="category-list">
+        <h2>Danh sách Thể loại</h2>
+        <ul>
+          <li>
+            Huyền ảo <button class="btn red">Xóa</button>
+            <button class="btn yellow">Sửa</button>
+          </li>
+          <li>
+            Tình cảm <button class="btn red">Xóa</button>
+            <button class="btn yellow">Sửa</button>
+          </li>
+          <li>
+            Tiên hiệp <button class="btn red">Xóa</button>
+            <button class="btn yellow">Sửa</button>
+          </li>
+          <li>
+            Đam mỹ <button class="btn red">Xóa</button>
+            <button class="btn yellow">Sửa</button>
+          </li>
+          <li>
+            Võng du <button class="btn red">Xóa</button>
+            <button class="btn yellow">Sửa</button>
+          </li>
+          <li>
+            Đồng nhân <button class="btn red">Xóa</button>
+            <button class="btn yellow">Sửa</button>
+          </li>
+          <li>
+            Cạnh kỹ <button class="btn red">Xóa</button>
+            <button class="btn yellow">Sửa</button>
+          </li>
+          <li>
+            Kiếm hiệp <button class="btn red">Xóa</button>
+            <button class="btn yellow">Sửa</button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="add-category">
+        <h2>Thêm Thể loại Mới</h2>
+        <form>
+          <label for="category-name">Tên Thể loại:</label>
+          <input
+            type="text"
+            id="category-name"
+            placeholder="Nhập tên thể loại"
+          />
+
+          <label for="order">Thứ tự:</label>
+          <input type="number" id="order" placeholder="Nhập thứ tự" />
+
+          <button type="submit" class="btn blue">Thêm Thể loại</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

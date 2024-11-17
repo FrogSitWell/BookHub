@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BOOKHUB</title>
+    <link rel="stylesheet" href="/Static/style/index/index.css" />
+    <link rel="stylesheet" href="/Static/style/index/footer.css" />
+    <link rel="stylesheet" href="/Static/style/index/nav.css" />
+    <link rel="stylesheet" href="/Static/style/index/banners.css" />
+    <link rel="stylesheet" href="/Static/style/index/dropdown.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <nav>
+        <ul>
+          <li class="logo">
+            <a href="#"
+              ><img src="/Static/imagines/logo.png" alt="Logo" class="nav-logo"
+            /></a>
+          </li>
+          <li class="dropdown">
+            <a href="#">
+              <i class="fas fa-bars"></i> Thể Loại
+              <!-- Icon cho thể loại -->
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Linh Hồn</a></li>
+              <li><a href="#">Kinh Dị</a></li>
+              <li><a href="#">Phiêu Lưu</a></li>
+              <li><a href="#">Khoa Học</a></li>
+            </ul>
+          </li>
+          <li>
+            <i class="fa fa-search"></i>
+            <input type="text" placeholder="Tìm kiếm tác giả, tên truy..." />
+          </li>
+          <li class="dropdown">
+            <a href="#">
+              <i class="fa-solid fa-user"></i> Tài Khoản
+              <!-- Icon cho thể loại -->
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/Views/homepage/login.html">Đăng Nhập</a></li>
+              <li><a href="/Views/homepage/register.html">Đăng Ký</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="banner">
+      <img src="/Static/imagines/banner.jpg" alt="Banner", width="1150px">
+    </div>
+    <!-- Nội dung chính -->
+    <div class="container">
+      <main>
+        <section class="truyen-vua-doc">
+          <h3>Truyện Vừa Đọc</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Thời gian</th>
+                <th>Tên Truyện</th>
+                <th>Tiến độ Đọc</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>4 tháng trước</td>
+                <td><a class="truyen-ten" href="#">Ma Chủng</a></td>
+                <td>Đã đọc: 79/762</td>
+                <td><button>X</button></td>
+              </tr>
+              <tr>
+                <td>4 tháng trước</td>
+                <td><a class="truyen-ten" href="#">Ma Chủng heheheeh</a></td>
+                <td>Đã đọc: 79/762</td>
+                <td><button>X</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Truyện Đề Cử -->
+        <section class="truyen-de-cu">
+          <h3>Truyện Đề Cử</h3>
+          <div class="truyen-list">
+            <!-- Mỗi mục truyện -->
+            <div class="truyen-item">
+              <img src="/Static/imagines/300.jpg" alt="Truyện 1" />
+              <div class="info">
+                <h4>Nghịch Thiên Tà Thần</h4>
+                <p>Tác giả: Hoa Thảo Miu</p>
+                <p>Thể loại: Huyền Ảo</p>
+              </div>
+            </div>
+            <!-- Thêm các mục truyện khác tương tự -->
+          </div>
+        </section>
+
+        <!-- Truyện Mới Cập Nhật -->
+        <section class="truyen-moi">
+          <h3>Truyện Mới Cập Nhật</h3>
+          <table>
+            <tr>
+              <th>Thể loại</th>
+              <th>Tên truyện</th>
+              <th>Chương</th>
+              <th>Tác giả</th>
+              <th>Ngày cập nhật</th>
+            </tr>
+            <tr>
+              <td>Huyền Ảo</td>
+              <td>Nghịch Thiên Tà Thần</td>
+              <td>Chương 106</td>
+              <td>Thanh Liên Nguyễn</td>
+              <td>1 ngày trước</td>
+            </tr>
+            <!-- Thêm các hàng khác tương tự -->
+          </table>
+        </section>
+
+        <!-- Xếp Hạng -->
+        <section class="bang-xep-hang">
+          <h3>Xếp Hạng Tuần</h3>
+          <div class="rankings">
+            <div class="ranking-box">
+              <h4>Đọc Nhiều Tuần</h4>
+              <ol>
+                <li>Nghịch Thiên Tà Thần - 164,586</li>
+                <li>Ngày Diệt Vong - 125,589</li>
+                <!-- Thêm các mục khác tương tự -->
+              </ol>
+            </div>
+            <div class="ranking-box">
+              <h4>Đề Cử Tuần</h4>
+              <ol>
+                <li>Toàn Chí Đọc Giả - 95,945</li>
+                <li>Nghịch Thiên Tà Thần - 3,658</li>
+                <!-- Thêm các mục khác tương tự -->
+              </ol>
+            </div>
+            <div class="ranking-box">
+              <h4>Thịnh Hành Tuần</h4>
+              <ol>
+                <li>Ngày Diệt Vong - 7</li>
+                <li>Bách Luyện Thành Thần - 3</li>
+                <!-- Thêm các mục khác tương tự -->
+              </ol>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>  
+  </body>
+  <!-- Link JavaScript -->
+  <script src="/Static/smooth/dropdown.js"></script>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section about">
+        <p>
+          Đây là trang web truyện chuyên cung cấp các bộ truyện nổi tiếng, cập
+          nhật hàng ngày.
+        </p>
+      </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 BookHub. Nhâm Mạnh Cường.</p>
+    </div>
+  </footer>
+</html>

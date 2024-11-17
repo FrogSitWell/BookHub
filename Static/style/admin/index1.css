@@ -1,0 +1,21 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Toàn bộ trang */
+body::before {
+  content: ""; /* Tạo một lớp phủ nền */
+  position: absolute;
+  top: 70px; /* Điều chỉnh khoảng cách theo chiều cao header */
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 70px); /* Chiều cao toàn màn hình trừ header */
+  background-image: url("/Static/imagines/anh-dao.jpg");
+  background-repeat: no-repeat; /* Không lặp lại */
+  background-size: cover; /* Để hình ảnh phủ toàn bộ màn hình */
+  background-attachment: fixed;
+  z-index: -1; /* Đưa background nằm dưới nội dung */
+}

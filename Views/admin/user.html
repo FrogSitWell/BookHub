@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý User</title>
+    <link rel="stylesheet" href="/Static/style/admin/user.css" />
+  </head>
+  <body>
+    <div class="header">
+      <p>Xin chào: admin</p>
+      <a href="/Views/homepage/login.html" class="logout">Đăng xuất</a>
+    </div>
+
+    <nav class="navbar">
+      <a href="/Views/admin/index1.html">Trang chủ</a>
+      <a href="/Views/admin/theloai.html">Quản lý thể loại</a>
+      <a href="/Views/admin/user.html">Quản lý user</a>
+      <a href="/Views/admin/slide.html">Quản lý Slide</a>
+    </nav>
+
+    <div class="container">
+      <h2>Danh sách người dùng</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID Admin</th>
+            <th>Tên</th>
+            <th>Email</th>
+            <th>Avatar</th>
+            <th>Role ID</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>admin</td>
+            <td>stackskill2@gmail.com</td>
+            <td><img src="https://via.placeholder.com/50" alt="Avatar" /></td>
+            <td>1</td>
+            <td>
+              <button class="btn yellow">Sửa</button>
+              <button class="btn red">Xóa</button>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>thành hiếu nguyen</td>
+            <td>a123@gmail.com</td>
+            <td><img src="https://via.placeholder.com/50" alt="Avatar" /></td>
+            <td>2</td>
+            <td>
+              <button class="btn yellow">Sửa</button>
+              <button class="btn red">Xóa</button>
+            </td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Thỏ</td>
+            <td>hieuhunters2@gmail.com</td>
+            <td><img src="https://via.placeholder.com/50" alt="Avatar" /></td>
+            <td>3</td>
+            <td>
+              <button class="btn green">Duyệt</button>
+              <button class="btn yellow">Sửa</button>
+              <button class="btn red">Xóa</button>
+            </td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Nam</td>
+            <td>nam410@gmail.com</td>
+            <td><img src="https://via.placeholder.com/50" alt="Avatar" /></td>
+            <td>3</td>
+            <td>
+              <button class="btn green">Duyệt</button>
+              <button class="btn yellow">Sửa</button>
+              <button class="btn red">Xóa</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

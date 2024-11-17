@@ -1,0 +1,32 @@
+/* Navbar */
+nav ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+  height: 20px;
+}
+
+nav ul li {
+  margin: 0 10px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #333333;
+  font-weight: bold;
+}
+
+/* Logo */
+.nav-logo {
+  width: 50px;
+  height: auto;
+}
+
+/* Icon */
+.fas {
+  margin-right: 5px;
+}

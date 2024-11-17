@@ -1,0 +1,92 @@
+/* Định dạng chung cho form-container */
+.form-container {
+  max-width: 700px;
+  margin: 50px auto; /* Căn giữa màn hình */
+  padding: 25px;
+  background-color: #ffffff; /* Nền trắng */
+  border: 1px solid #ddd; /* Viền mỏng */
+  border-radius: 10px; /* Góc bo tròn */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+  font-family: Arial, sans-serif;
+}
+
+/* Định dạng các nhóm form-group */
+.form-group {
+  margin-bottom: 20px; /* Khoảng cách giữa các nhóm */
+}
+
+/* Định dạng nhãn (label) */
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px; /* Khoảng cách với input/textarea */
+  font-size: 16px;
+  color: #333;
+}
+
+/* Định dạng input */
+.form-group input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus {
+  border-color: #007bff; /* Màu viền khi focus */
+}
+
+/* Định dạng textarea */
+.form-group textarea {
+  width: 100%;
+  height: 120px; /* Chiều cao mặc định */
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  resize: vertical; /* Người dùng có thể điều chỉnh chiều cao */
+  transition: border-color 0.3s ease;
+}
+
+.form-group textarea:focus {
+  border-color: #007bff; /* Màu viền khi focus */
+}
+
+/* Định dạng select */
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-group select:focus {
+  border-color: #007bff; /* Màu viền khi focus */
+}
+
+/* Hiệu ứng hover cho các phần tử tương tác */
+.form-group input[type="text"]:hover,
+.form-group textarea:hover,
+.form-group select:hover {
+  border-color: #555; /* Đổi màu viền khi hover */
+}
+
+/* Tùy chỉnh nút dropdown */
+.form-group select option {
+  padding: 10px;
+}
+
+/* Định dạng tổng thể */
+body {
+  background-color: #f4f4f9; /* Màu nền tổng thể */
+  color: #333;
+  font-family: Arial, sans-serif;
+}

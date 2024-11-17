@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý Slide</title>
+    <link rel="stylesheet" href="/Static/style/admin/slide.css" />
+  </head>
+  <body>
+    <div class="header">
+      <p>Xin chào: admin</p>
+      <a href="/Views/homepage/login.html" class="logout">Đăng xuất</a>
+    </div>
+
+    <nav class="navbar">
+      <a href="/Views/admin/index1.html">Trang chủ</a>
+      <a href="/Views/admin/theloai.html">Quản lý thể loại</a>
+      <a href="/Views/admin/user.html">Quản lý user</a>
+      <a href="/Views/admin/slide.html">Quản lý Slide</a>
+    </nav>
+
+    <div class="container">
+      <div class="list">
+        <h3>Danh sách Ảnh Trang Bìa</h3>
+        <div class="item">
+          <img src="image1.jpg" alt="Ảnh trang bìa" />
+          <p>Thứ tự: 1</p>
+          <p>Trạng thái: Hiển thị</p>
+          <button class="btn delete">Xóa</button>
+          <button class="btn edit">Sửa</button>
+        </div>
+        <div class="item">
+          <img src="image2.jpg" alt="Ảnh trang bìa" />
+          <p>Thứ tự: 2</p>
+          <p>Trạng thái: Hiển thị</p>
+          <button class="btn delete">Xóa</button>
+          <button class="btn edit">Sửa</button>
+        </div>
+      </div>
+      <div class="form">
+        <h3>Đăng Ảnh Mới</h3>
+        <form action="#">
+          <label for="image">Ảnh:</label>
+          <input type="file" id="image" name="image" />
+          <label for="order">Thứ tự:</label>
+          <input type="number" id="order" name="order" />
+          <label for="status">Trạng thái:</label>
+          <select id="status" name="status">
+            <option value="show">Hiển thị</option>
+            <option value="hide">Ẩn</option>
+          </select>
+          <button type="submit" class="btn">Đăng Ảnh</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

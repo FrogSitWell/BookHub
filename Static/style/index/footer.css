@@ -1,0 +1,27 @@
+footer {
+  border-top: 1px solid #ccc; /* Đường kẻ ngang màu xám nhạt */
+  padding: 20px 0; /* Khoảng cách bên trong */
+  text-align: center; /* Canh giữa nội dung */
+}
+
+.footer-content {
+  margin-bottom: 10px; /* Khoảng cách giữa phần nội dung và đường kẻ */
+}
+
+.footer-section h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.footer-section p {
+  margin: 0;
+  font-size: 14px;
+  color: #555; /* Màu chữ tối hơn một chút */
+}
+
+.footer-bottom p {
+  margin: 0;
+  font-size: 12px;
+  color: #777; /* Màu chữ nhạt hơn */
+}

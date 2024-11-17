@@ -1,0 +1,82 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif; /* Thêm font chữ cho trang */
+}
+
+header {
+  background-color: #ffffff;
+  max-width: 100%; /* Đảm bảo chiều rộng của header bằng 100% */
+  padding: 10px 20px;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between; /* Căn giữa logo và các mục khác */
+  align-items: center;
+  list-style-type: none;
+}
+
+.navbar .logo {
+  display: flex;
+  align-items: center;
+}
+
+.navbar .logo img {
+  width: 50px;
+  height: auto;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  padding: 10px;
+  margin: 0 10px;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #007bff; /* Thêm hiệu ứng hover */
+}
+
+.navbar .dropdown {
+  position: relative;
+}
+
+.navbar .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  width: 180px; /* Chiều rộng menu dropdown */
+  list-style-type: none;
+}
+
+.navbar .dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.navbar .dropdown-menu li {
+  padding: 10px;
+}
+
+.navbar .dropdown-menu li a {
+  color: #333;
+  text-decoration: none;
+  text-align: left;
+}
+
+.navbar .dropdown-menu li a:hover {
+  background-color: #f1f1f1; /* Thêm hiệu ứng hover cho mục trong menu */
+}

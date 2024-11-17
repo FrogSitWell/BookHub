@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+/* Reset mặc định */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-feature-settings: "Poppins", sans-serif;
+}
+
+header {
+  background-color: #cdcccc;
+  max-width: 1150px; /* Chiều rộng tối đa */
+  margin: 0 auto; /* Căn giữa */
+  padding: 20px 0; /* Padding bao quanh */
+  text-align: center;
+}
+
+/* Toàn bộ trang */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Main content */
+main {
+  padding: 20px 0;
+}
+
+.truyen-item1 {
+  display: flex; /* Sắp xếp các phần tử con nằm cạnh nhau */
+  align-items: flex-start; /* Căn phần tử theo chiều dọc */
+  margin-bottom: 20px; /* Khoảng cách giữa các mục truyện */
+}
+
+.truyen-item1 img {
+  max-width: 350px; /* Đặt kích thước tối đa cho ảnh */
+  margin-right: 100px; /* Khoảng cách giữa ảnh và phần chữ */
+  border-radius: 5px; /* Tùy chỉnh bo góc cho ảnh */
+}
+
+.truyen-item1 .info {
+  margin-bottom: 142px; /* Tạo khoảng cách giữa info và nút */
+}
+
+.info {
+  display: flex;
+  flex-direction: column; /* Sắp xếp các đoạn văn theo cột */
+  justify-content: center; /* Căn giữa nếu cần */
+}
+
+.info h4 {
+  margin: 0 0 10px 0; /* Tạo khoảng cách bên dưới tiêu đề */
+  font-size: 18px; /* Tùy chỉnh kích thước chữ */
+}
+
+.info p {
+  margin: 5px 0; /* Tạo khoảng cách giữa các đoạn văn */
+  color: #555; /* Màu chữ xám nhạt */
+  font-size: 14px; /* Kích thước chữ nhỏ hơn */
+}
+/*thanh gioi thieu */
+.khoi-xam {
+  background-color: #cdcccc; /* Màu xám nhạt */
+  padding: 10px; /* Khoảng cách bên trong */
+  border-radius: 0; /* Bo góc nếu cần */
+  width: 1160px; /* Chiều rộng */
+  height: 40px; /* Chiều cao */
+}
+/*nội dung giới thiệu */
+.post {
+  background-color: #f9f9f9;
+  padding: 20px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.post p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}

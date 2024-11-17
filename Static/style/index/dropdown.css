@@ -1,0 +1,37 @@
+/* Dropdown Menu */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  background-color: #ffffff; /* Màu trắng */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 4px;
+  z-index: 1;
+  min-width: 160px;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+  background-color: #ffffff;
+  height: auto;
+}
+
+.dropdown-menu li {
+  padding: 8px 0;
+}
+
+.dropdown-menu li a {
+  color: #131212;
+  font-weight: normal;
+  text-decoration: none;
+  display: flex;
+}
+
+.dropdown-menu li a:hover {
+  background-color: #f1e9e9;
+}

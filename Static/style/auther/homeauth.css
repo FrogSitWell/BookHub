@@ -1,0 +1,34 @@
+/* Reset mặc định */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif; /* Thêm font chữ cho trang */
+}
+
+header {
+  background-color: #ffffff;
+  max-width: 100%; /* Đảm bảo chiều rộng của header bằng 100% */
+  padding: 10px 20px;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 70px);
+  background-image: url("/Static/imagines/tien-hiep-1.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  z-index: -1;
+}
