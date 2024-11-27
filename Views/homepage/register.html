@@ -26,6 +26,13 @@
           <input type="password" placeholder="Password" required />
           <i class="bx bxs-lock-alt"></i>
         </div>
+        <div class="input-box">
+          <label for="role">Select Role:</label>
+          <select id="role" name="role" required>
+            <option value="user">User</option>
+            <option value="author">Author</option>
+          </select>
+        </div>
         <div class="remember-forgot">
           <label> <input type="checkbox" />Remeber me</label>
         </div>
@@ -38,5 +45,47 @@
         </div>
       </form>
     </div>
+    <script>
+      // Lắng nghe sự kiện submit của form
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Ngừng hành động mặc định của form
+
+          // Lấy giá trị từ các input
+          const email = document.getElementById("email").value;
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+          const role = document.getElementById("role").value;
+
+          // Tạo đối tượng dữ liệu cần gửi
+          const userData = {
+            email: email,
+            username: username,
+            password: password,
+            role: role,
+          };
+
+          // Gửi yêu cầu đăng ký đến backend API
+          fetch("http://localhost:8080/api/updateUser", {
+            method: "PUT", // Hoặc PATCH nếu bạn muốn cập nhật phần cụ thể
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedUserData),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // Nếu cập nhật thành công
+              alert("Cập nhật thông tin thành công!");
+              console.log(data); // In ra dữ liệu phản hồi từ backend
+            })
+            .catch((error) => {
+              // Nếu có lỗi
+              console.error("Lỗi cập nhật:", error);
+              alert("Đã có lỗi xảy ra trong quá trình cập nhật.");
+            });
+        });
+    </script>
   </body>
 </html>

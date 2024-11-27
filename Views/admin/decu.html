@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý User</title>
+    <link rel="stylesheet" href="/Static/style/admin/user.css" />
+    <link rel="stylesheet" href="/Static/style/admin/decu.css" />
+  </head>
+  <body>
+    <div class="header">
+      <p>Xin chào: admin</p>
+      <a href="/Views/homepage/login.html" class="logout">Đăng xuất</a>
+    </div>
+
+    <nav class="navbar">
+      <a href="/Views/admin/index1.html">Trang chủ</a>
+      <a href="/Views/admin/theloai.html">Quản lý thể loại</a>
+      <a href="/Views/admin/user.html">Quản lý user</a>
+      <a href="/Views/admin/slide.html">Quản lý Slide</a>
+      <a href="/Views/admin/decu.html">Đề cử</a>
+      <a href="/Views/admin/xephang.html">Xếp hạng</a>
+    </nav>
+
+    <div class="container">
+      <input
+        type="text"
+        id="search"
+        placeholder="Tìm kiếm tác phẩm..."
+        class="search-box"
+      />
+
+      <table>
+        <tbody>
+          <tr>
+            <td>Tác phẩm 1</td>
+            <td><button class="edit-btn">Sửa</button></td>
+            <td><button class="delete-btn">Xóa</button></td>
+          </tr>
+          <tr>
+            <td>Tác phẩm 2</td>
+            <td><button class="edit-btn">Sửa</button></td>
+            <td><button class="delete-btn">Xóa</button></td>
+          </tr>
+          <tr>
+            <td>Tác phẩm 3</td>
+            <td><button class="edit-btn">Sửa</button></td>
+            <td><button class="delete-btn">Xóa</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

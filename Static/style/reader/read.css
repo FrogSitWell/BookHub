@@ -8,7 +8,7 @@
 }
 
 header {
-  background-color: #cdcccc;
+  background-color: #ffffff;
   max-width: 1150px; /* Chiều rộng tối đa */
   margin: 0 auto; /* Căn giữa */
   padding: 20px 0; /* Padding bao quanh */
@@ -39,6 +39,7 @@ main {
   display: flex; /* Sắp xếp các phần tử con nằm cạnh nhau */
   align-items: flex-start; /* Căn phần tử theo chiều dọc */
   margin-bottom: 20px; /* Khoảng cách giữa các mục truyện */
+  position: relative;
 }
 
 .truyen-item1 img {
@@ -71,7 +72,13 @@ main {
 .khoi-xam {
   background-color: #cdcccc; /* Màu xám nhạt */
   padding: 10px; /* Khoảng cách bên trong */
-  border-radius: 0; /* Bo góc nếu cần */
+  width: 1160px; /* Chiều rộng */
+  height: 40px; /* Chiều cao */
+  position: relative; /* Để có thể căn chỉnh các phần tử bên trong */
+}
+.khoi-xam1 {
+  background-color: #cdcccc; /* Màu xám nhạt */
+  padding: 10px; /* Khoảng cách bên trong */
   width: 1160px; /* Chiều rộng */
   height: 40px; /* Chiều cao */
 }
@@ -88,4 +95,63 @@ main {
   margin: 0;
   font-size: 14px;
   color: #666;
+}
+
+.truyen-tg {
+  position: absolute; /* Đặt vị trí tuyệt đối so với `.truyen-item1` */
+  top: 0; /* Căn trên */
+  right: 0; /* Đặt sát bên phải `.truyen-item1` */
+  padding: 10px;
+  background-color: #fafafa;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 400px; /* Đặt chiều rộng cụ thể nếu cần */
+  height: 200px;
+}
+.truyen-tg p a {
+  text-decoration: none; /* Bỏ gạch chân mặc định */
+  color: #000000;
+  font-weight: bold; /* In đậm */
+}
+
+.content-scroll {
+  max-height: 150px; /* Chiều cao tối đa cho vùng cuộn */
+  overflow-y: auto; /* Cho phép cuộn theo chiều dọc */
+  padding-right: 10px; /* Thêm khoảng cách cho thanh cuộn */
+}
+
+#openPopup {
+  position: absolute; /* Đặt vị trí tuyệt đối để có thể căn chỉnh dễ dàng */
+  right: 10px; /* Đưa nút vào bên phải, cách biên phải 10px */
+  top: 35%; /* Đưa nút vào giữa chiều cao của .khoi-xam */
+  background-color: transparent; /* Không có màu nền */
+  border: none; /* Loại bỏ viền */
+  cursor: pointer; /* Thay đổi con trỏ khi di chuột lên nút */
+  font-size: 13px; /* Tùy chỉnh kích thước chữ */
+  color: #333; /* Màu chữ */
+}
+#openPopup:hover {
+  color: #a813a8; /* Đổi màu chữ khi hover */
+}
+table {
+  width: 100%; /* Đặt chiều rộng cho bảng */
+  border-collapse: collapse; /* Hợp nhất các đường biên */
+}
+
+td {
+  padding: 10px; /* Khoảng cách giữa các ô */
+  text-align: left; /* Căn chỉnh nội dung sang trái */
+}
+
+/* Xóa viền bảng và các ô */
+table,
+td {
+  border: none;
+}
+a {
+  text-decoration: none; /* Bỏ gạch chân của liên kết */
+  color: #000000; /* Màu chữ của liên kết */
+}
+
+a:hover {
+  color: #ff5733; /* Đổi màu chữ khi hover */
 }

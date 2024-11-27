@@ -1,0 +1,79 @@
+/* Popup chính */
+.popup-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Đặt popup ở giữa */
+  background-color: #fff; /* Màu nền popup */
+  padding: 20px; /* Khoảng cách bên trong */
+  border-radius: 10px; /* Bo góc */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Đổ bóng */
+  z-index: 1000; /* Đảm bảo popup nằm trên overlay */
+  width: 60%; /* Chiều rộng popup */
+  max-width: 2500px; /* Đặt chiều rộng tối đa */
+  height: 2000px; /* Chiều cao tự động theo nội dung */
+  max-height: 80%; /* Đặt chiều cao tối đa */
+  overflow-y: auto; /* Hiện thanh cuộn nếu nội dung quá dài */
+  display: none; /* Mặc định ẩn */
+}
+
+/* Tiêu đề popup */
+.popup-content h2 {
+  margin: 0;
+  font-size: 24px; /* Kích thước chữ */
+  color: #333; /* Màu chữ */
+  text-align: left; /* Căn giữa chữ */
+  margin-bottom: 15px; /* Khoảng cách bên dưới tiêu đề */
+}
+
+/* Nội dung popup */
+.popup-content p {
+  font-size: 16px; /* Kích thước chữ */
+  color: #555; /* Màu chữ nhạt hơn */
+  line-height: 1.5; /* Khoảng cách giữa các dòng */
+  text-align: center; /* Căn giữa */
+}
+
+/* Nút đóng popup */
+.popup-content .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px; /* Kích thước biểu tượng */
+  color: #555; /* Màu chữ */
+  cursor: pointer; /* Đổi con trỏ khi hover */
+}
+
+.popup-content .close:hover {
+  color: #ff5733; /* Đổi màu khi hover */
+}
+.popup-table {
+  width: 100%; /* Đặt chiều rộng cho bảng */
+  border-collapse: collapse; /* Hợp nhất các đường biên */
+}
+
+.popup-table th,
+.popup-table td {
+  padding: 10px; /* Khoảng cách giữa các ô */
+  text-align: left; /* Căn chỉnh nội dung sang trái */
+}
+
+.popup-table th {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.popup-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+.icon-up-down {
+  width: 20px; /* Chỉnh kích thước hình ảnh nhỏ */
+  height: auto; /* Giữ tỷ lệ gốc của hình ảnh */
+  background-color: #f0f0f0; /* Màu nền đồng với nền của trang */
+  filter: grayscale(100%); /* Làm hình ảnh chuyển thành màu xám */
+  transition: transform 0.3s ease; /* Thêm hiệu ứng khi hover */
+}
+
+.icon-up-down:hover {
+  transform: scale(1.1); /* Phóng to nhẹ khi hover */
+}
