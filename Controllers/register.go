@@ -41,7 +41,6 @@ func RegisterUser(c *gin.Context) {
         user.RoleID = 3 // Gán vai trò mặc định là Reader (ID = 3)
     }
 
-
 	log.Printf("Received User: %+v\n", user) // Log giá trị user nhận được
 
 	// In ra thông tin user đã nhận được
@@ -102,6 +101,7 @@ func RegisterUser(c *gin.Context) {
 		"message": "User registered successfully",
 		"user":    user,
 		"token":   token,
+		"role": role,
 	})
 }
 

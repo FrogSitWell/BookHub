@@ -11,4 +11,5 @@ func SetupRoutes(r *gin.Engine) {
 	{
 		api.POST("/register", Controllers.RegisterUser)
 	}
+
 }
