@@ -7,9 +7,22 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 func main() {
+
+	// Khởi tạo Gin router
+	r := gin.Default()
+
+	// Middleware cho CORS
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000", "http://127.0.0.1:5500"}, // Thay bằng URL của frontend
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}))
+
 	database.Connect()
 
 	// Thêm log để thông báo bắt đầu migrate
@@ -32,14 +45,14 @@ func main() {
     } else {
         fmt.Println("Migration successful!")
     }
-	// Khởi tạo Gin router
-	r := gin.Default()
 
 	// Cấu hình các routes
 	routes.SetupRoutes(r)
 
 	// Chạy Gin server
-	if err := r.Run(":8080"); err != nil {
+	if err := r.Run(":8081"); err != nil {
 		log.Fatalf("Không thể chạy server: %v", err)
 	}
+	gin.SetMode(gin.ReleaseMode)
+
 }

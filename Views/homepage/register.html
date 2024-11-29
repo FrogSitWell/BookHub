@@ -29,8 +29,8 @@
         <div class="input-box">
           <label for="role">Select Role:</label>
           <select id="role" name="role" required>
-            <option value="user">User</option>
             <option value="author">Author</option>
+            <option value="reader">Reader</option>
           </select>
         </div>
         <div class="remember-forgot">
@@ -48,42 +48,55 @@
     <script>
       // Lắng nghe sự kiện submit của form
       document
-        .getElementById("registerForm")
+        .querySelector("form")
         .addEventListener("submit", function (event) {
           event.preventDefault(); // Ngừng hành động mặc định của form
 
           // Lấy giá trị từ các input
-          const email = document.getElementById("email").value;
-          const username = document.getElementById("username").value;
-          const password = document.getElementById("password").value;
+          const email = document.querySelector(
+            "input[placeholder='Email']"
+          ).value;
+          const username = document.querySelector(
+            "input[placeholder='Username']"
+          ).value;
+          const password = document.querySelector(
+            "input[placeholder='Password']"
+          ).value;
           const role = document.getElementById("role").value;
 
           // Tạo đối tượng dữ liệu cần gửi
           const userData = {
             email: email,
-            username: username,
+            name: username,
             password: password,
-            role: role,
+            role_id: parseInt(role), // Truyền role dưới dạng object
           };
 
           // Gửi yêu cầu đăng ký đến backend API
-          fetch("http://localhost:8080/api/updateUser", {
-            method: "PUT", // Hoặc PATCH nếu bạn muốn cập nhật phần cụ thể
+          fetch("http://localhost:8081/api/register", {
+            method: "POST", // Phương thức POST để đăng ký
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(updatedUserData),
+            body: JSON.stringify(userData),
           })
-            .then((response) => response.json())
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Đăng ký thất bại!");
+              }
+              return response.json();
+            })
             .then((data) => {
-              // Nếu cập nhật thành công
-              alert("Cập nhật thông tin thành công!");
-              console.log(data); // In ra dữ liệu phản hồi từ backend
+              // Nếu đăng ký thành công
+              alert("Đăng ký thành công!");
+              console.log("Dữ liệu phản hồi:", data);
+              // Có thể chuyển hướng đến trang khác nếu cần
+              window.location.href = "/Views/homepage/login.html";
             })
             .catch((error) => {
               // Nếu có lỗi
-              console.error("Lỗi cập nhật:", error);
-              alert("Đã có lỗi xảy ra trong quá trình cập nhật.");
+              console.error("Lỗi đăng ký:", error);
+              alert("Đã có lỗi xảy ra trong quá trình đăng ký.");
             });
         });
     </script>
