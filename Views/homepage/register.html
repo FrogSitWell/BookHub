@@ -63,13 +63,18 @@
             "input[placeholder='Password']"
           ).value;
           const role = document.getElementById("role").value;
+          const roleMapping = {
+            author: 2, // giả sử Author có RoleID là 2
+            reader: 3, // giả sử Reader có RoleID là 3
+          };
 
-          // Tạo đối tượng dữ liệu cần gửi
+          const roleId = roleMapping[role]; // Tìm RoleID từ tên role
+
           const userData = {
             email: email,
             name: username,
             password: password,
-            role_id: parseInt(role), // Truyền role dưới dạng object
+            role_id: roleId, // Gửi RoleID thay vì tên role
           };
 
           // Gửi yêu cầu đăng ký đến backend API

@@ -12,7 +12,7 @@
   </head>
   <body>
     <div class="wrapper">
-      <form action="">
+      <form id="form">
         <h1>Login</h1>
         <div class="input-box">
           <input type="text" placeholder="Username" required />
@@ -36,5 +36,82 @@
         </div>
       </form>
     </div>
+    <script>
+      // Lắng nghe sự kiện submit của form
+      document.addEventListener("DOMContentLoaded", function () {
+        // Lấy đối tượng form
+        const form = document.getElementById("form");
+
+        if (form) {
+          form.addEventListener("submit", async function (event) {
+            event.preventDefault(); // Ngừng hành động mặc định của form
+            console.log("Form submitted");
+
+            // Lấy thông tin đăng nhập từ form
+            const username = document.querySelector(
+              "input[placeholder='Username']"
+            ).value;
+            const password = document.querySelector(
+              "input[placeholder='Password']"
+            ).value;
+
+            // Kiểm tra nếu các trường username và password không rỗng
+            if (!username || !password) {
+              alert("Vui lòng điền đầy đủ tên người dùng và mật khẩu.");
+              return;
+            }
+
+            // Tạo dữ liệu để gửi
+            const loginData = {
+              name: username,
+              password: password,
+            };
+
+            try {
+              // Gửi yêu cầu POST tới API đăng nhập
+              const response = await fetch("http://localhost:8081/api/login", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(loginData),
+              });
+
+              // Kiểm tra nếu yêu cầu thành công
+              if (response.ok) {
+                const data = await response.json();
+
+                // Lưu token (nếu cần)
+                const token = data.token;
+                localStorage.setItem("authToken", token); // Hoặc sessionStorage
+
+                // Kiểm tra vai trò của người dùng và chuyển hướng
+                switch (data.user.role_id) {
+                  case 1:
+                    window.location.href = "/Views/admin/index1.html"; // Đến trang Admin
+                    break;
+                  case 2:
+                    window.location.href = "/Views/auth/index2.html"; // Đến trang Author
+                    break;
+                  case 3:
+                    window.location.href = "/Views/homepage/indexuser.html"; // Đến trang Reader
+                    break;
+                  default:
+                    alert("Role not recognized!");
+                }
+              } else {
+                const errorData = await response.json();
+                alert(errorData.message || "Login failed!");
+              }
+            } catch (error) {
+              console.error("Error during login:", error);
+              alert("An error occurred. Please try again later.");
+            }
+          });
+        } else {
+          console.error("Form element not found!");
+        }
+      });
+    </script>
   </body>
 </html>
