@@ -25,7 +25,7 @@ body::before {
   left: 0;
   width: 100%;
   height: calc(100vh - 70px);
-  background-image: url("/Static/imagines/tien-hiep-1.jpeg");
+
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;

@@ -69,6 +69,45 @@
         </tbody>
       </table>
     </div>
+    <script>
+      // Hàm để lấy danh sách sách từ API và hiển thị lên table
+      function fetchBooks() {
+        fetch("/api/books")
+          .then((response) => response.json())
+          .then((data) => {
+            const tbody = document.querySelector("table tbody");
+            tbody.innerHTML = ""; // Xóa dữ liệu cũ trong table
+
+            // Duyệt qua các sách và thêm vào bảng
+            data.forEach((book, index) => {
+              const tr = document.createElement("tr");
+
+              // Tạo các ô cho mỗi cột
+              tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td><img src="${book.avatar_url}" alt="Ảnh bìa" /></td>
+                <td>${book.title}</td>
+                <td>${book.category}</td>
+                <td>${book.chapters}</td>
+                <td>${book.author}</td>
+                <td>
+                  <button class="btn blue">Chương mới</button>
+                  <button class="btn yellow">Sửa</button>
+                  <button class="btn red">Xóa</button>
+                </td>
+              `;
+
+              tbody.appendChild(tr);
+            });
+          })
+          .catch((error) => {
+            console.error("Lỗi khi lấy dữ liệu:", error);
+          });
+      }
+
+      // Gọi hàm fetchBooks khi trang được tải
+      window.onload = fetchBooks;
+    </script>
   </body>
   <!-- Link JavaScript -->
   <script src="/Static/smooth/dropdown.js"></script>

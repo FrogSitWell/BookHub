@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Thêm sách mới
 func CreateBook(c *gin.Context) {
 	var book Models.Book
 
@@ -98,4 +97,13 @@ func DeleteBook(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Book deleted successfully"})
+}
+//theloai
+func GetGenre(c *gin.Context) {
+    var genres []Models.Genre
+    if err := database.DB.Model(&Models.Genre{}).Find(&genres).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Cannot fetch genres"})
+        return
+    }
+    c.JSON(http.StatusOK, genres) // Trả về danh sách thể loại cùng với sách
 }

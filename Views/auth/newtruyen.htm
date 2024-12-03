@@ -35,7 +35,7 @@
     </header>
     <!-- Nội dung chính -->
     <div class="form-container">
-      <form>
+      <form id="create-book-form">
         <div class="form-left">
           <label for="upload-image">Chọn ảnh bìa</label>
           <input type="file" id="upload-image" accept="image/*" />
@@ -62,38 +62,97 @@
         </div>
 
         <div class="form-group">
-          <label for="ten-truyen">Tên tác giả</label>
+          <label for="ten-tac-gia">Tên tác giả</label>
           <input
             type="text"
-            id="ten-truyen"
-            name="ten-truyen"
+            id="ten-tac-gia"
+            name="ten-tac-gia"
             placeholder="Nhập tên tác giả"
           />
         </div>
 
         <div class="form-group">
-          <label for="the-loai">Thể loại</label>
-          <select id="the-loai" name="the-loai">
+          <label for="category-dropdown">Thể loại</label>
+          <select id="category-dropdown" name="the-loai">
             <option value="" disabled selected>Vui lòng chọn</option>
-            <option value="hanh-dong">Hành động</option>
-            <option value="lang-man">Lãng mạn</option>
-            <option value="kinh-di">Kinh dị</option>
+            <!-- Các tùy chọn sẽ được thêm động từ JavaScript -->
           </select>
         </div>
 
-        <div class="form-group">
-          <label for="luu-phai">Lưu phái</label>
-          <select id="luu-phai" name="luu-phai">
-            <option value="" disabled selected>Vui lòng chọn</option>
-            <option value="kiem-hiep">Kiếm hiệp</option>
-            <option value="tien-hiep">Tiên hiệp</option>
-            <option value="vo-hiep">Võ hiệp</option>
-          </select>
-        </div>
+        <button type="button" onclick="saveBookWithAvatar()">Tạo Truyện</button>
       </form>
     </div>
+
+    <script>
+      async function loadCategories() {
+        try {
+          const response = await fetch("http://localhost:8081/api/genre");
+          const genres = await response.json(); // API trả về danh sách thể loại
+
+          const dropdown = document.getElementById("category-dropdown");
+
+          // Xóa các option cũ (nếu có)
+          dropdown.innerHTML =
+            '<option value="" disabled selected>Vui lòng chọn</option>';
+
+          // Duyệt qua danh sách thể loại và thêm vào dropdown
+          genres.forEach((genre) => {
+            const option = document.createElement("option");
+            option.value = genre.ID; // ID của thể loại
+            option.textContent = genre.Name; // Tên thể loại
+            dropdown.appendChild(option);
+          });
+        } catch (error) {
+          console.error("Lỗi khi tải thể loại:", error);
+        }
+      }
+
+      // Gọi hàm khi DOM sẵn sàng
+      document.addEventListener("DOMContentLoaded", loadCategories);
+
+      async function saveBookWithAvatar() {
+        const name = document.getElementById("ten-truyen").value.trim();
+        const description = document.getElementById("gioi-thieu").value.trim();
+        const author = document.getElementById("ten-tac-gia").value.trim();
+        const genreId = document.getElementById("category-dropdown").value;
+        const file = document.getElementById("upload-image").files[0];
+
+        if (!name || !author || !genreId) {
+          alert("Vui lòng điền đầy đủ thông tin bắt buộc!");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("description", description);
+        formData.append("author", author);
+        formData.append("genreid", genreId);
+        if (file) {
+          formData.append("avatar", file);
+        }
+
+        try {
+          const response = await fetch("http://localhost:8081/api/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "Failed to save book");
+          }
+
+          alert("Truyện đã được lưu thành công!");
+          console.log("Saved book:", data);
+          window.location.reload(); // Tải lại trang
+        } catch (error) {
+          console.error("Error saving book:", error);
+          alert(`Lỗi: ${error.message}`);
+        }
+      }
+    </script>
+    <!-- Link JavaScript -->
+
+    <script src="/Static/smooth/addanh.js"></script>
   </body>
-  <!-- Link JavaScript -->
-  <script src="/Static/smooth/dropdown.js"></script>
-  <script src="/Static/smooth/addanh.js"></script>
 </html>

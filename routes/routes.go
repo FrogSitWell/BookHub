@@ -11,6 +11,8 @@ func SetupRoutes(r *gin.Engine) {
 	{
 		api.POST("/register", Controllers.RegisterUser)
 		api.POST("/login", Controllers.LoginUser)
+		api.GET("/genre",Controllers.GetGenre)
+		api.POST("/upload",Controllers.CreateBookWithAvatar)
 	}
 	
 
@@ -29,5 +31,8 @@ func SetupRoutes(r *gin.Engine) {
 		bookRoutes.GET("/:id", Controllers.GetBookByID)
 		bookRoutes.PUT("/:id", Controllers.UpdateBook)
 		bookRoutes.DELETE("/:id", Controllers.DeleteBook)
+	
+
 	}
+
 }

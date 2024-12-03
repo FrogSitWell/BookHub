@@ -7,6 +7,7 @@ type Book struct {
     Name          string      `gorm:"type:varchar(255);not null"`
     Author        string      `gorm:"type:varchar(255);not null"`
     AvatarURL     string      `gorm:"type:text;not null"`
+    Description   string      `gorm:"type:text;not null"`
     TotalChapters int         `gorm:"not null"`
     GenreID       uint        `gorm:"not null"`
     Genre         Genre       `gorm:"foreignKey:GenreID;constraint:OnDelete:CASCADE"`
