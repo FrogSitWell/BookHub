@@ -37,25 +37,21 @@
       </form>
     </div>
     <script>
-      // Lắng nghe sự kiện submit của form
       document.addEventListener("DOMContentLoaded", function () {
-        // Lấy đối tượng form
         const form = document.getElementById("form");
 
         if (form) {
           form.addEventListener("submit", async function (event) {
-            event.preventDefault(); // Ngừng hành động mặc định của form
-            console.log("Form submitted");
+            event.preventDefault(); // Ngăn hành động mặc định của form
 
-            // Lấy thông tin đăng nhập từ form
-            const username = document.querySelector(
-              "input[placeholder='Username']"
-            ).value;
-            const password = document.querySelector(
-              "input[placeholder='Password']"
-            ).value;
+            // Lấy giá trị từ các trường nhập liệu
+            const username = document
+              .querySelector("input[placeholder='Username']")
+              .value.trim();
+            const password = document
+              .querySelector("input[placeholder='Password']")
+              .value.trim();
 
-            // Kiểm tra nếu các trường username và password không rỗng
             if (!username || !password) {
               alert("Vui lòng điền đầy đủ tên người dùng và mật khẩu.");
               return;
@@ -68,7 +64,6 @@
             };
 
             try {
-              // Gửi yêu cầu POST tới API đăng nhập
               const response = await fetch("http://localhost:8081/api/login", {
                 method: "POST",
                 headers: {
@@ -77,41 +72,45 @@
                 body: JSON.stringify(loginData),
               });
 
-              // Kiểm tra nếu yêu cầu thành công
               if (response.ok) {
                 const data = await response.json();
 
-                // Lưu token (nếu cần)
-                const token = data.token;
-                localStorage.setItem("authToken", token); // Hoặc sessionStorage
+                // Lưu token và user_id vào localStorage
+                localStorage.setItem("token", data.token); // Lưu token
+                localStorage.setItem("user_id", data.user.id); // Lưu user_id
 
-                // Kiểm tra vai trò của người dùng và chuyển hướng
-                switch (data.user.role_id) {
+                // Chuyển hướng dựa trên vai trò của người dùng
+                const role = data.user.role_id;
+                switch (role) {
                   case 1:
-                    window.location.href = "/Views/admin/index1.html"; // Đến trang Admin
+                    window.location.href = "/Views/admin/index1.html";
                     break;
                   case 2:
-                    window.location.href = "/Views/auth/index2.html"; // Đến trang Author
+                    window.location.href = "/Views/auth/index2.html";
                     break;
                   case 3:
-                    window.location.href = "/Views/homepage/indexuser.html"; // Đến trang Reader
+                    window.location.href = "/Views/homepage/indexuser.html";
                     break;
                   default:
-                    alert("Role not recognized!");
+                    alert("Vai trò người dùng không được xác định.");
                 }
               } else {
                 const errorData = await response.json();
-                alert(errorData.message || "Login failed!");
+                alert(
+                  errorData.message ||
+                    "Đăng nhập thất bại. Vui lòng kiểm tra lại!"
+                );
               }
             } catch (error) {
-              console.error("Error during login:", error);
-              alert("An error occurred. Please try again later.");
+              console.error("Lỗi trong quá trình đăng nhập:", error);
+              alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
             }
           });
         } else {
-          console.error("Form element not found!");
+          console.error("Không tìm thấy phần tử form!");
         }
       });
     </script>
+    <script src="/Static/smooth/common.js"></script>
   </body>
 </html>

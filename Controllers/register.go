@@ -2,6 +2,7 @@ package Controllers
 
 import (
 	"bookhub/Models"
+	"bookhub/config"
 	"bookhub/database"
 	"errors"
 	"fmt"
@@ -15,9 +16,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
-
-// Chìa khóa bí mật để ký JWT token (nên thay đổi trong môi trường sản xuất)
-var jwtKey = []byte("secret")
 
 // Hàm tiện ích để phản hồi lỗi API
 func respondWithError(c *gin.Context, code int, message string) {
@@ -113,5 +111,5 @@ func generateJWT(user Models.User) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(jwtKey)
+	return token.SignedString(config.JwtKey)
 }

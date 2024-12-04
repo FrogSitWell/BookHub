@@ -11,7 +11,9 @@ type Book struct {
     TotalChapters int         `gorm:"not null"`
     GenreID       uint        `gorm:"not null"`
     Genre         Genre       `gorm:"foreignKey:GenreID;constraint:OnDelete:CASCADE"`
+    UserID        uint        `gorm:"not null"`
     AverageRate   float64     `gorm:"default:0"`
+    User          User        `gorm:"foreignKey:UserID"`
     Comments      []Comment   `gorm:"foreignKey:BookID"`
     Assess        []Assess    `gorm:"foreignKey:BookID"`
     Follows       []Follow    `gorm:"foreignKey:BookID"`

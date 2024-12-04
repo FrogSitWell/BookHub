@@ -23,7 +23,10 @@
           </a>
         </li>
         <li class="dropdown">
-          <a href="#"> <i class="fa-solid fa-user"></i> Tài Khoản </a>
+          <a href="#">
+            <i class="fa-solid fa-user"></i>
+            <span id="user-name">Tài Khoản</span>
+          </a>
           <ul class="dropdown-menu">
             <li><a href="/Views/homepage/login.html">Đăng Xuất</a></li>
             <li><a href="/Views/auth/newtruyen.htm">Thêm Truyện Mới</a></li>
@@ -84,6 +87,35 @@
     </div>
 
     <script>
+      async function fetchUserInfo() {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+          // Giải mã token để lấy thông tin user
+          const decodedToken = jwt_decode(token);
+          const userID = decodedToken.sub; // Giả sử userID lưu trong trường `sub` của token
+
+          console.log("User ID:", userID);
+
+          // Tiến hành gửi dữ liệu với userID
+          fetch("http://localhost:8081/protected/profile", {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Upload successful:", data);
+            })
+            .catch((error) => {
+              console.error("Error uploading:", error);
+            });
+        } else {
+          console.log("User not logged in");
+        }
+      }
       async function loadCategories() {
         try {
           const response = await fetch("http://localhost:8081/api/genre");
@@ -109,13 +141,30 @@
 
       // Gọi hàm khi DOM sẵn sàng
       document.addEventListener("DOMContentLoaded", loadCategories);
-
+      // tạo sách mới
       async function saveBookWithAvatar() {
         const name = document.getElementById("ten-truyen").value.trim();
         const description = document.getElementById("gioi-thieu").value.trim();
         const author = document.getElementById("ten-tac-gia").value.trim();
         const genreId = document.getElementById("category-dropdown").value;
         const file = document.getElementById("upload-image").files[0];
+
+        // Lấy token từ localStorage và giải mã
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Bạn cần đăng nhập trước khi thêm truyện!");
+          return;
+        }
+
+        let userID;
+        try {
+          const decodedToken = jwt_decode(token);
+          userID = decodedToken.sub; // Lấy userID từ trường `sub` trong token
+        } catch (error) {
+          alert("Lỗi xác thực người dùng!");
+          console.error("JWT Decode Error:", error);
+          return;
+        }
 
         if (!name || !author || !genreId) {
           alert("Vui lòng điền đầy đủ thông tin bắt buộc!");
@@ -127,15 +176,22 @@
         formData.append("description", description);
         formData.append("author", author);
         formData.append("genreid", genreId);
+        formData.append("user_id", userID); // Thêm userID vào form data
         if (file) {
           formData.append("avatar", file);
         }
 
         try {
-          const response = await fetch("http://localhost:8081/api/upload", {
-            method: "POST",
-            body: formData,
-          });
+          const response = await fetch(
+            "http://localhost:8081/protected/upload",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`, // Thêm Authorization header
+              },
+              body: formData,
+            }
+          );
 
           const data = await response.json();
           if (!response.ok) {
@@ -152,7 +208,9 @@
       }
     </script>
     <!-- Link JavaScript -->
-
+    <script src="/Static/smooth/common.js"></script>
     <script src="/Static/smooth/addanh.js"></script>
+    <script src="/Static/smooth/dropdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
   </body>
 </html>

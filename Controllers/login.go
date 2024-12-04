@@ -2,16 +2,29 @@ package Controllers
 
 import (
 	"bookhub/Models"
+	"bookhub/config"
 	"bookhub/database"
 	"errors"
+	"strconv"
+	"time"
 
 	"net/http"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
+
+func GenerateJWT(user Models.User) (string, error) {
+	claims := &jwt.StandardClaims{
+		Subject:   strconv.Itoa(int(user.ID)),
+		ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(config.JwtKey)
+}
 // Hàm đăng nhập người dùng
 func LoginUser(c *gin.Context) {
 	var user Models.User

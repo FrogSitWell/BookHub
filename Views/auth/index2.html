@@ -32,7 +32,40 @@
         </li>
       </nav>
     </header>
+    <script>
+      async function fetchUserInfo() {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+          // Giải mã token để lấy thông tin user
+          const decodedToken = jwt_decode(token);
+          const userID = decodedToken.sub; // Giả sử userID lưu trong trường `sub` của token
+
+          console.log("User ID:", userID);
+
+          // Tiến hành gửi dữ liệu với userID
+          fetch("http://localhost:8081/protected/profile", {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Upload successful:", data);
+            })
+            .catch((error) => {
+              console.error("Error uploading:", error);
+            });
+        } else {
+          console.log("User not logged in");
+        }
+      }
+    </script>
+    <!-- Link JavaScript -->
+    <script src="/Static/smooth/dropdown.js"></script>
+    <script src="/Static/smooth/common.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
   </body>
-  <!-- Link JavaScript -->
-  <script src="/Static/smooth/dropdown.js"></script>
 </html>
