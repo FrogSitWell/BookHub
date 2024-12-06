@@ -37,26 +37,31 @@
     <div class="form-container">
       <form>
         <div class="form-group">
-          <label for="the-loai">Thể loại</label>
+          <label for="the-loai">Tên truyện</label>
           <select id="the-loai" name="the-loai">
             <option value="" disabled selected>Vui lòng chọn</option>
-            <option value="hanh-dong">Hành động</option>
-            <option value="lang-man">Lãng mạn</option>
-            <option value="kinh-di">Kinh dị</option>
           </select>
         </div>
-
         <div class="form-group">
-          <label for="gioi-thieu">Giới thiệu</label>
+          <label for="the-loai">Tên chương</label>
+          <input
+            type="text"
+            id="ten-chuong"
+            name="ten-chuong"
+            placeholder="Nhập tên chuong"
+          />
+        </div>
+        <div class="form-group">
+          <label for="gioi-thieu">Nội dung</label>
           <textarea
             id="gioi-thieu"
             name="gioi-thieu"
-            placeholder="Nhập giới thiệu"
+            placeholder="Nhập nội dung"
           ></textarea>
         </div>
       </form>
     </div>
+    <!-- Link JavaScript -->
+    <script src="/Static/smooth/dropdown.js"></script>
   </body>
-  <!-- Link JavaScript -->
-  <script src="/Static/smooth/dropdown.js"></script>
 </html>

@@ -88,13 +88,3 @@ func CreateBookWithAvatar(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Book created successfully", "data": book})
 }
 
-func GetBooksByUser(c *gin.Context) {
-	userID := c.MustGet("userID").(string)
-	var books []Models.Book
-	if err := database.DB.Where("user_id = ?", userID).Find(&books).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to retrieve books"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"books": books})
-}

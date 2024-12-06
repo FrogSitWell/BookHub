@@ -27,8 +27,8 @@
           <ul class="dropdown-menu">
             <li><a href="/Views/homepage/login.html">Đăng Xuất</a></li>
             <li><a href="/Views/auth/newtruyen.htm">Thêm Truyện Mới</a></li>
-            <li><a href="/Views/auth/newtruyen.htm">Thêm Bản Thảo</a></li>
-            <li><a href="/Views/auth/newtruyen.htm">Danh Sách Truyện</a></li>
+            <li><a href="/Views/auth/newchap.html">Thêm Bản Thảo</a></li>
+            <li><a href="/Views/auth/listtruyen.html">Danh Sách Truyện</a></li>
           </ul>
         </li>
       </nav>
@@ -36,10 +36,6 @@
     <!-- Nội dung chính -->
     <div class="container">
       <h1>Danh Sách Truyện</h1>
-      <div class="search-bar">
-        <input type="text" placeholder="Tìm kiếm" />
-        <button class="search-btn">Tìm kiếm</button>
-      </div>
       <table>
         <thead>
           <tr>
@@ -52,59 +48,113 @@
             <th>Thao tác</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td><img src="https://via.placeholder.com/50" alt="Ảnh bìa" /></td>
-            <td>Toàn chức pháp sư</td>
-            <td>Huyền ảo</td>
-            <td>1</td>
-            <td>Loạn</td>
-            <td>
-              <button class="btn blue">Chương mới</button>
-              <button class="btn yellow">Sửa</button>
-              <button class="btn red">Xóa</button>
-            </td>
-          </tr>
+        <tbody id="bookList">
+          <!-- Dữ liệu truyện sẽ được thêm vào đây -->
         </tbody>
       </table>
+      <div id="pagination"></div>
     </div>
     <script>
-      // Hàm để lấy danh sách truyện từ API
-      function fetchBooks() {
-        fetch("http://localhost:8081/api/booklist") // Đảm bảo API backend được gọi đúng URL
-          .then((response) => response.json())
-          .then((data) => {
-            const books = data.books;
-            const tbody = document.querySelector("table tbody");
-            tbody.innerHTML = ""; // Xóa nội dung cũ
+      let currentPage = 1; // Khai báo biến toàn cục
+      const itemsPerPage = 5; // Số lượng sách trên mỗi trang
+      let allBooks = []; // Biến lưu trữ tất cả các sách
 
-            // Duyệt qua danh sách sách và thêm vào bảng
-            books.forEach((book, index) => {
-              const row = document.createElement("tr");
-              row.innerHTML = `
-                <td>${index + 1}</td>
-                <td><img src="${book.avatar_url}" alt="Ảnh bìa" /></td>
-                <td>${book.name}</td>
-                <td>${book.genre.name}</td>
-                <td>${book.total_chapters}</td>
-                <td>${book.author}</td>
-                <td>
-                  <button class="btn blue">Chương mới</button>
-                  <button class="btn yellow">Sửa</button>
-                  <button class="btn red">Xóa</button>
-                </td>
-              `;
-              tbody.appendChild(row);
-            });
-          })
-          .catch((error) => {
-            console.error("Error fetching books:", error);
-          });
+      // Lấy danh sách truyện từ backend
+      function getBooks() {
+        fetch('http://localhost:8081/protected/booklist', {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.books && data.books.length > 0) {
+            allBooks = data.books;
+            console.log("Response from backend:", allBooks);
+            displayBooks();  // Hiển thị sách sau khi nhận được dữ liệu
+            setupPagination(); // Tạo phân trang
+          } else {
+            document.getElementById('bookList').innerHTML = '<tr><td colspan="7">Bạn chưa có truyện nào</td></tr>';
+          }
+        })
+        .catch(err => {
+          console.error('Lỗi khi lấy danh sách truyện', err);
+          document.getElementById('bookList').innerHTML = '<tr><td colspan="7">Lỗi khi tải danh sách truyện</td></tr>';
+        });
       }
 
-      // Gọi hàm fetchBooks khi trang được tải
-      window.onload = fetchBooks;
+      // Hiển thị truyện trong bảng
+      function displayBooks() {
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedBooks = allBooks.slice(start, end);
+
+        const tbody = document.getElementById('bookList');
+        tbody.innerHTML = '';  // Xóa các dòng trước đó
+
+        paginatedBooks.forEach((book, index) => {
+          console.log("Book ID:", book.ID); // Kiểm tra giá trị của book.Id.
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${start + index + 1}</td>
+            <td><img src="${book.AvatarURL}" alt="Ảnh bìa" /></td>
+            <td>${book.Name }</td>
+            <td>${book.Genre.Name}</td>
+            <td>${book.TotalChapters}</td>
+            <td>${book.Author}</td>
+            <td>
+              <button class="btn blue">Chương mới</button>
+              <button class="btn yellow" onclick="window.location.href='/Views/auth/fixtruyen.html?id=' + (${book.ID})">Sửa</button>
+              <button class="btn red" onclick="deleteBook(${book.ID})">Xóa</button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      // Tạo phân trang
+      function setupPagination() {
+        const pageCount = Math.ceil(allBooks.length / itemsPerPage);
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';  // Xóa phân trang cũ
+
+        for (let i = 1; i <= pageCount; i++) {
+          const pageButton = document.createElement('button');
+          pageButton.textContent = i;
+          pageButton.onclick = () => changePage(i);  // Gọi changePage khi nhấn nút
+          pagination.appendChild(pageButton);
+        }
+      }
+
+      // Chuyển trang
+      function changePage(page) {
+        currentPage = page;  // Cập nhật trang hiện tại
+        displayBooks();  // Hiển thị lại danh sách sách của trang mới
+      }
+
+      // Hàm xóa truyện
+      function deleteBook(bookId) {
+            console.log("Book ID to delete:", bookId); // Kiểm tra ID có được truyền đúng không
+
+            if (confirm("Bạn có chắc muốn xóa quyển sách này không?")) {
+                fetch(`http://localhost:8081/api/${bookId}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Xóa sách thành công!");
+                        allBooks = allBooks.filter(book => book.ID !== bookId); // Kiểm tra đúng ID
+                        displayBooks(); // Hiển thị lại danh sách sau khi xóa
+                    } else {
+                        response.json().then(data => alert(data.error || "Xóa sách thất bại."));
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            }
+        }
+      // Gọi hàm khi tải trang
+      getBooks();
+    </script>
+    
     </script>
     <!-- Link JavaScript -->
     <script src="/Static/smooth/dropdown.js"></script>

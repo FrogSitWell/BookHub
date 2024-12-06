@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BOOKHUB</title>
+    <link rel="stylesheet" href="/Static/style/index/dropdown.css" />
+    <link rel="stylesheet" href="/Static/style/auther/homeauth.css" />
+    <link rel="stylesheet" href="/Static/style/auther/navauth.css" />
+    <link rel="stylesheet" href="/Static/style/auther/newtruyen.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <nav class="navbar">
+        <li class="logo">
+          <a href="/Views/homepage/index.html">
+            <img src="/Static/imagines/logo.png" alt="Logo" class="nav-logo" />
+          </a>
+        </li>
+        <li class="dropdown">
+          <a href="#">
+            <i class="fa-solid fa-user"></i>
+            <span id="user-name">Tài Khoản</span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="/Views/homepage/login.html">Đăng Xuất</a></li>
+            <li><a href="/Views/auth/newtruyen.htm">Thêm Truyện Mới</a></li>
+            <li><a href="/Views/auth/newchap.html">Thêm Bản Thảo</a></li>
+            <li><a href="/Views/auth/listtruyen.html">Danh Sách Truyện</a></li>
+          </ul>
+        </li>
+      </nav>
+    </header>
+    <!-- Nội dung chính -->
+    <div class="form-container">
+      <form id="editBookForm">
+        <div class="form-left">
+          <label for="upload-image">Chọn ảnh bìa</label>
+          <input type="file" id="upload-image" accept="image/*" />
+          <div id="image-preview"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="ten-truyen">Tên truyện</label>
+          <input type="text" id="ten-truyen" name="ten-truyen" />
+        </div>
+
+        <div class="form-group">
+          <label for="gioi-thieu">Giới thiệu</label>
+          <textarea
+            id="gioi-thieu"
+            name="gioi-thieu"
+            placeholder="Nhập giới thiệu"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="ten-tac-gia">Tên tác giả</label>
+          <input
+            type="text"
+            id="ten-tac-gia"
+            name="ten-tac-gia"
+            placeholder="Nhập tên tác giả"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="category-dropdown">Thể loại</label>
+          <select id="category-dropdown" name="the-loai">
+            <option value="" disabled selected>Vui lòng chọn</option>
+            <!-- Các tùy chọn sẽ được thêm động từ JavaScript -->
+          </select>
+        </div>
+
+        <button type="submit">Cập Nhập</button>
+      </form>
+    </div>
+    <script>
+      // Lấy ID từ URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const bookId = urlParams.get("id");
+      console.log(bookId); // Kiểm tra giá trị bookId
+
+      // Lấy thể loại
+      async function loadCategories() {
+        try {
+          const response = await fetch("http://localhost:8081/api/genre");
+          const genres = await response.json(); // API trả về danh sách thể loại
+          console.log("Genres loaded:", genres); // In ra danh sách thể loại
+          const dropdown = document.getElementById("category-dropdown");
+
+          // Xóa các option cũ (nếu có)
+          dropdown.innerHTML = "";
+
+          // Duyệt qua danh sách thể loại và thêm vào dropdown
+          genres.forEach((genre) => {
+            const option = document.createElement("option");
+            option.value = genre.ID; // ID của thể loại
+            option.textContent = genre.Name; // Tên thể loại
+            dropdown.appendChild(option);
+          });
+        } catch (error) {
+          console.error("Lỗi khi tải thể loại:", error);
+        }
+      }
+
+      // Gọi hàm khi DOM sẵn sàng
+      document.addEventListener("DOMContentLoaded", loadCategories);
+
+      // Load dữ liệu ban đầu
+      fetch(`http://127.0.0.1:8081/api/books/${bookId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Book not found");
+          }
+          return response.json();
+        })
+        .then((book) => {
+          console.log(book); // In ra đối tượng sách để kiểm tra
+          // Đổ dữ liệu lên form
+          document.getElementById("ten-truyen").value = book.Name;
+          document.getElementById("gioi-thieu").value = book.Description;
+          document.getElementById("ten-tac-gia").value = book.Author;
+
+          // Gán đúng GenreID vào dropdown
+          document.getElementById("category-dropdown").value = book.GenreID;
+
+          // Hiển thị ảnh bìa nếu có
+          if (book.AvatarURL) {
+            const imagePreview = document.getElementById("image-preview");
+            imagePreview.innerHTML = `<img src="${book.AvatarURL}" alt="Ảnh bìa" />`;
+          }
+        })
+        .catch((error) => console.error(error.message));
+
+      // Cập nhật dữ liệu khi submit
+      document
+        .getElementById("editBookForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault(); // Ngăn chặn hành động mặc định của form
+
+          try {
+            // Lấy giá trị từ form
+            const updatedData = {
+              Name: document.getElementById("ten-truyen").value.trim(),
+              Author: document.getElementById("ten-tac-gia").value.trim(),
+              Description: document.getElementById("gioi-thieu").value.trim(),
+              GenreID: parseInt(
+                document.getElementById("category-dropdown").value
+              ), // Lấy ID từ dropdown
+              AvatarURL: document
+                .getElementById("image-preview")
+                .querySelector("img")?.src, // Lấy URL từ thẻ <img> nếu có
+            };
+
+            console.log(updatedData); // Kiểm tra dữ liệu được gửi đi
+
+            // Gửi yêu cầu cập nhật
+            const response = await fetch(
+              `http://127.0.0.1:8081/api/books/${bookId}`,
+              {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedData),
+              }
+            );
+
+            // Xử lý kết quả trả về
+            if (response.ok) {
+              alert("Cập nhật thành công!");
+              window.location.href =
+                "http://127.0.0.1:5500/Views/auth/listtruyen.html"; // Quay lại trang danh sách
+            } else {
+              const errorData = await response.json();
+              alert(
+                `Cập nhật thất bại: ${errorData.message || "Có lỗi xảy ra!"}`
+              );
+            }
+          } catch (err) {
+            alert("Đã xảy ra lỗi khi cập nhật! Vui lòng thử lại.");
+            console.error(err);
+          }
+        });
+    </script>
+
+    <!-- Link JavaScript -->
+    <script src="/Static/smooth/common.js"></script>
+    <script src="/Static/smooth/addanh.js"></script>
+    <script src="/Static/smooth/dropdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+  </body>
+</html>

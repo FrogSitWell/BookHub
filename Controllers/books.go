@@ -3,6 +3,7 @@ package Controllers
 import (
 	"bookhub/Models"
 	"bookhub/database"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -41,11 +42,11 @@ func GetBooks(c *gin.Context) {
 
 // Lấy thông tin chi tiết sách
 func GetBookByID(c *gin.Context) {
-	id := c.Param("id")
+	bookID := c.Param("id")
 	var book Models.Book
 
 	// Tìm sách theo ID
-	if err := database.DB.Preload("Genre").First(&book, id).Error; err != nil {
+	if err := database.DB.Preload("Genre").First(&book, bookID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Book not found"})
 		return
 	}
@@ -54,50 +55,38 @@ func GetBookByID(c *gin.Context) {
 }
 
 // Cập nhật thông tin sách
+// Xử lý yêu cầu PUT để cập nhật sách
 func UpdateBook(c *gin.Context) {
-	id := c.Param("id")
-	var book Models.Book
+    var updatedBook Models.Book
+    bookId := c.Param("id")
 
-	// Kiểm tra sách có tồn tại
-	if err := database.DB.First(&book, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Book not found"})
-		return
-	}
+    if err := c.ShouldBindJSON(&updatedBook); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"message": "Dữ liệu không hợp lệ"})
+        return
+    }
 
-	// Parse JSON input
-	if err := c.ShouldBindJSON(&book); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+    // Kiểm tra xem sách có tồn tại không
+    var book Models.Book
+    if result := database.DB.First(&book, bookId); result.Error != nil {
+        c.JSON(http.StatusNotFound, gin.H{"message": "Sách không tồn tại"})
+        return
+    }
 
-	// Cập nhật thông tin sách
-	if err := database.DB.Save(&book).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update book"})
-		return
-	}
+    // Cập nhật sách
+    book.Name = updatedBook.Name
+    book.Author = updatedBook.Author
+    book.Description = updatedBook.Description
+    book.GenreID = updatedBook.GenreID
+    book.AvatarURL = updatedBook.AvatarURL
 
-	c.JSON(http.StatusOK, gin.H{"message": "Book updated successfully", "data": book})
+    if result := database.DB.Save(&book); result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"message": "Có lỗi khi cập nhật sách"})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "Cập nhật thành công"})
 }
 
-// Xóa sách
-func DeleteBook(c *gin.Context) {
-	id := c.Param("id")
-	var book Models.Book
-
-	// Kiểm tra sách có tồn tại
-	if err := database.DB.First(&book, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Book not found"})
-		return
-	}
-
-	// Xóa sách
-	if err := database.DB.Delete(&book).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete book"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"message": "Book deleted successfully"})
-}
 //theloai
 func GetGenre(c *gin.Context) {
     var genres []Models.Genre
