@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/Static/style/index/dropdown.css" />
     <link rel="stylesheet" href="/Static/style/auther/navauth.css" />
     <link rel="stylesheet" href="/Static/style/auther/homeauth.css" />
+    <link rel="stylesheet" href="/Static/style/auther/listchap.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -33,39 +34,48 @@
       </nav>
     </header>
     <script>
-      async function fetchUserInfo() {
-        const token = localStorage.getItem("token");
-
-        if (token) {
-          // Giải mã token để lấy thông tin user
-          const decodedToken = jwt_decode(token);
-          const userID = decodedToken.sub; // Giả sử userID lưu trong trường `sub` của token
-
-          console.log("User ID:", userID);
-
-          // Tiến hành gửi dữ liệu với userID
-          fetch("http://localhost:8081/protected/profile", {
-            method: "POST",
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-            body: formData,
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log("Upload successful:", data);
-            })
-            .catch((error) => {
-              console.error("Error uploading:", error);
-            });
-        } else {
-          console.log("User not logged in");
-        }
-      }
+      <div class="container">
+        <div class="story-info">
+          <h1>Thông Tin Truyện</h1>
+          <p>
+            <strong>Tên Truyện:</strong> Truyện Hay
+          </p>
+          <p>
+            <strong>Tác Giả:</strong> Tác Giả Vĩ Đại
+          </p>
+          <p>
+            <strong>Thể Loại:</strong> Phiêu Lưu, Hành Động
+          </p>
+          <p>
+            <strong>Mô Tả:</strong> Đây là một truyện về những cuộc phiêu lưu kỳ
+            thú...
+          </p>
+        </div>
+        <div class="chapters-list">
+          <h2>Danh Sách Chương</h2>
+          <div class="chapters">
+            <div class="row">
+              <div class="chapter">
+                <a href="#">Chương 1: Khởi Đầu</a>
+              </div>
+              <div class="chapter">
+                <a href="#">Chương 2: Hành Trình</a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="chapter">
+                <a href="#">Chương 3: Cạm Bẫy</a>
+              </div>
+              <div class="chapter">
+                <a href="#">Chương 4: Cuộc Đấu</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>;
     </script>
     <!-- Link JavaScript -->
     <script src="/Static/smooth/dropdown.js"></script>
     <script src="/Static/smooth/common.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
   </body>
 </html>

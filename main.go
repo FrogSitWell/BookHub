@@ -14,7 +14,7 @@ func main() {
 
 	// Khởi tạo Gin router
 	r := gin.Default()
-
+	
 	// Middleware cho CORS
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000", "http://127.0.0.1:5500"}, // Thay bằng URL của frontend

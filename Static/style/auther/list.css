@@ -111,3 +111,11 @@ button.red {
 button.red:hover {
   background-color: #c82333;
 }
+button.green {
+  background-color: #216827;
+  color: white;
+}
+
+button.green:hover {
+  background-color: #216827;
+}

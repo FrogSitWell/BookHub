@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/Static/style/auther/homeauth.css" />
     <link rel="stylesheet" href="/Static/style/auther/navauth.css" />
     <link rel="stylesheet" href="/Static/style/auther/newchap.css" />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -28,27 +29,31 @@
             <li><a href="/Views/homepage/login.html">Đăng Xuất</a></li>
             <li><a href="/Views/auth/newtruyen.htm">Thêm Truyện Mới</a></li>
             <li><a href="/Views/auth/newtruyen.htm">Thêm Bản Thảo</a></li>
-            <li><a href="/Views/auth/newtruyen.htm">Danh Sách Truyện</a></li>
+            <li><a href="/Views/auth/listtruyen.html">Danh Sách Truyện</a></li>
           </ul>
         </li>
       </nav>
     </header>
     <!-- Nội dung chính -->
     <div class="form-container">
-      <form>
+      <form id="add-chapter-form">
         <div class="form-group">
-          <label for="the-loai">Tên truyện</label>
-          <select id="the-loai" name="the-loai">
-            <option value="" disabled selected>Vui lòng chọn</option>
-          </select>
+          <label for="ten-truyen">Tên truyện</label>
+          <input
+            type="text"
+            id="ten-truyen"
+            name="ten-truyen"
+            placeholder="Nhập tên truyện"
+          />
         </div>
         <div class="form-group">
-          <label for="the-loai">Tên chương</label>
+          <label for="ten-chuong">Tên chương</label>
+          <!-- Changed to match the id "ten-chuong" -->
           <input
             type="text"
             id="ten-chuong"
             name="ten-chuong"
-            placeholder="Nhập tên chuong"
+            placeholder="Nhập tên chương"
           />
         </div>
         <div class="form-group">
@@ -59,9 +64,86 @@
             placeholder="Nhập nội dung"
           ></textarea>
         </div>
+        <button type="submit">Thêm chương</button>
       </form>
     </div>
+    <script>
+      // Khi tải trang, tự động lấy tên truyện từ API và hiển thị trong input
+      const params = new URLSearchParams(window.location.search);
+      const bookId = params.get("id");
+
+      if (bookId) {
+        // Gọi API để lấy tên truyện
+        fetch(`http://localhost:8081/api/name/${bookId}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to fetch book name");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // Gán tên truyện vào input
+            const tenTruyenInput = document.getElementById("ten-truyen");
+            tenTruyenInput.value = data.name || "Tên truyện không tìm thấy";
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } else {
+        alert("Không tìm thấy ID của truyện");
+      }
+
+      // Xử lý khi submit form để thêm chương mới
+      document
+        .getElementById("add-chapter-form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault(); // Ngăn form reload trang
+
+          // Lấy giá trị từ form
+          const chapterName = document.getElementById("ten-chuong").value;
+          const content = document.getElementById("gioi-thieu").value;
+
+          if (!bookId || !chapterName || !content) {
+            alert("Vui lòng điền đầy đủ thông tin!");
+            return;
+          }
+
+          // Gửi dữ liệu đến API backend
+          try {
+            const response = await fetch("http://localhost:8081/api/chapters", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                bookId: parseInt(bookId),
+                chapterName: chapterName,
+                content: content,
+              }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              alert("Thêm chương thành công!");
+              console.log("Response từ server:", result);
+
+              // Chuyển hướng về danh sách truyện
+              window.location.href =
+                "http://127.0.0.1:5500/Views/auth/listtruyen.html";
+            } else {
+              console.error("Lỗi từ server:", result);
+              alert("Thêm chương thất bại: " + result.message);
+            }
+          } catch (error) {
+            console.error("Lỗi kết nối:", error);
+            alert("Không thể kết nối đến server. Vui lòng thử lại.");
+          }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- Link JavaScript -->
+    <script src="/Static/smooth/common.js"></script>
     <script src="/Static/smooth/dropdown.js"></script>
   </body>
 </html>

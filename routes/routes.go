@@ -16,6 +16,8 @@ func SetupRoutes(r *gin.Engine) {
 		api.POST("/login", Controllers.LoginUser)
 		api.GET("/genre",Controllers.GetGenre)
 		api.DELETE("/:id", Controllers.DeleteBook)
+		api.POST("/chapters", Controllers.AddChapter) 
+		api.GET("/name/:id",Controllers.GetBooksName)
 	}
 	
 
@@ -27,6 +29,8 @@ func SetupRoutes(r *gin.Engine) {
 		protected.GET("/profile", Controllers.GetProfile)
 		protected.GET("/booklist", Controllers.GetBooksByUser)
 		protected.POST("/upload",Controllers.CreateBookWithAvatar)
+	
+		
 	}
 	// Routes cho sách
 	bookRoutes := api.Group("/books")
@@ -36,9 +40,9 @@ func SetupRoutes(r *gin.Engine) {
 		bookRoutes.GET("/:id", Controllers.GetBookByID)
 		bookRoutes.DELETE("/:id", Controllers.DeleteBook)
 		bookRoutes.PUT("/:id",Controllers.UpdateBook)
-
+		
 	}
 	// Route để hiển thị trang chỉnh sửa sách
 	r.GET("/auth/fixtruyen/:id", Controllers.RenderFixBookPage)
-
+	r.GET("/auth/newchap/:id", Controllers.RenderFixBookPage)
 }
