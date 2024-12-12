@@ -71,12 +71,11 @@ func AddChapter(c *gin.Context) {
 
 	// In ra URL nội dung đã được upload lên Cloudinary
 	fmt.Println("Content URL from Cloudinary:", contentURL)
-
-	// Lấy số chương tiếp theo (ChapterNumber)
+	// Lấy số thứ tự (SortOrder) của chương tiếp theo
 	var lastChapter Models.Chapter
-	if err := database.DB.Where("book_id = ?", request.BookID).Order("chapter_number desc").First(&lastChapter).Error; err != nil {
-		// Nếu không có chương nào, mặc định ChapterNumber = 1
-		lastChapter.ChapterNumber = 0
+	if err := database.DB.Where("book_id = ?", request.BookID).Order("sort_order desc").First(&lastChapter).Error; err != nil {
+		// Nếu không có chương nào, mặc định SortOrder = 1
+		lastChapter.SortOrder = 0
 	}
 
 	// Tạo chương mới
@@ -85,6 +84,7 @@ func AddChapter(c *gin.Context) {
 		Title:        request.ChapterName,
 		ContentURL:   contentURL,
 		ChapterNumber: lastChapter.ChapterNumber + 1, // Tăng số chương
+		SortOrder:    lastChapter.SortOrder + 1,       // Gán SortOrder theo giá trị tiếp theo
 	}
 
 	// Thêm chương mới vào cơ sở dữ liệu
@@ -99,7 +99,6 @@ func AddChapter(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to update book's total chapters", "error": err.Error()})
 		return
 	}
-
 	// Trả về thành công
 	c.JSON(http.StatusOK, gin.H{"success": true, "chapter": newChapter})
 }

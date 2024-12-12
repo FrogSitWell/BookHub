@@ -1,80 +1,111 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
+/* Giao diện tổng thể */
+#story-form {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
+  background-color: #ffffff;
+  color: #000000;
   padding: 20px;
 }
 
-.container {
+/* Bố cục chính */
+#story-form .container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 20px;
 }
 
-.story-info {
-  width: 45%;
+/* Thông tin truyện */
+#story-form .story-info {
+  width: 350px;
+  height: 500px;
   background-color: #fff;
-  padding: 20px;
+  padding: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  border: 2px solid #007bff; /* Màu viền nổi bật */
 }
 
-h1,
-h2 {
-  margin-bottom: 15px;
-}
-
-h1 {
-  font-size: 24px;
+/* Placeholder hình ảnh */
+#story-form .image-placeholder {
+  width: 150px;
+  height: 200px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: bold;
-}
-
-h2 {
-  font-size: 20px;
+  color: #ffffff;
+  border-radius: 5px;
   margin-bottom: 10px;
+  overflow: hidden; /* Ngăn ảnh bị tràn */
 }
 
-p {
-  margin-bottom: 10px;
+#story-form .image-placeholder img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Đảm bảo tỷ lệ ảnh */
 }
 
-.chapters-list {
-  width: 50%;
+/* Danh sách chương */
+#story-form .chapters-list {
+  width: 600px;
   background-color: #fff;
-  padding: 20px;
+  padding: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.chapters {
+  border-radius: 10px;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column; /* Sắp xếp theo cột */
+  gap: 10px; /* Khoảng cách giữa các chương */
+  max-height: 600px; /* Giới hạn chiều cao */
+  overflow-y: auto; /* Bật cuộn dọc */
 }
 
-.row {
+#story-form .chapters-list h2 {
+  margin-bottom: 15px; /* Khoảng cách dưới tiêu đề */
+}
+
+/* Phần tử chương */
+#story-form .chapter-item {
   display: flex;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.chapter {
-  width: 45%;
-  margin-right: 10%;
+  justify-content: space-between; /* Đưa nội dung và nút xóa sang 2 bên */
+  align-items: center;
   background-color: #f9f9f9;
   padding: 10px;
+  border: 1px solid #ddd;
   border-radius: 5px;
-  text-align: center;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
 }
 
-.chapter a {
+#story-form .chapter-item:hover {
+  background-color: #e9e9e9;
+}
+
+/* Liên kết chương */
+#story-form .chapter-item a {
   text-decoration: none;
-  color: #007bff;
+  color: #181818;
   font-weight: bold;
+  transition: color 0.3s ease;
+  flex-grow: 1; /* Chiếm toàn bộ không gian bên trái */
 }
 
-.chapter a:hover {
-  text-decoration: underline;
+#story-form .chapter-item a:hover {
+  color: #0056b3;
+}
+
+/* Nút xóa */
+#story-form .delete-btn {
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+#story-form .delete-btn:hover {
+  background-color: #d9363e;
 }

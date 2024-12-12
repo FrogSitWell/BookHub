@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BOOKHUB</title>
     <link rel="stylesheet" href="/Static/style/index/dropdown.css" />
-    <link rel="stylesheet" href="/Static/style/auther/navauth.css" />
-    <link rel="stylesheet" href="/Static/style/auther/homeauth.css" />
     <link rel="stylesheet" href="/Static/style/auther/listchap.css" />
+    <link rel="stylesheet" href="/Static/style/auther/navauth.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -27,55 +26,154 @@
           <ul class="dropdown-menu">
             <li><a href="/Views/homepage/login.html">Đăng Xuất</a></li>
             <li><a href="/Views/auth/newtruyen.htm">Thêm Truyện Mới</a></li>
-            <li><a href="/Views/auth/newchap.html">Thêm Bản Thảo</a></li>
             <li><a href="/Views/auth/listtruyen.html">Danh Sách Truyện</a></li>
           </ul>
         </li>
       </nav>
     </header>
-    <script>
+    <!-- Nội dung chính -->
+    <form id="story-form">
       <div class="container">
         <div class="story-info">
           <h1>Thông Tin Truyện</h1>
-          <p>
-            <strong>Tên Truyện:</strong> Truyện Hay
-          </p>
-          <p>
-            <strong>Tác Giả:</strong> Tác Giả Vĩ Đại
-          </p>
-          <p>
-            <strong>Thể Loại:</strong> Phiêu Lưu, Hành Động
-          </p>
-          <p>
-            <strong>Mô Tả:</strong> Đây là một truyện về những cuộc phiêu lưu kỳ
-            thú...
-          </p>
+          <div class="image-placeholder" id="book-image">
+            <p>Đang tải...</p>
+          </div>
+          <p><strong>Tên:</strong> <span id="book-name">Đang tải...</span></p>
         </div>
         <div class="chapters-list">
           <h2>Danh Sách Chương</h2>
-          <div class="chapters">
-            <div class="row">
-              <div class="chapter">
-                <a href="#">Chương 1: Khởi Đầu</a>
-              </div>
-              <div class="chapter">
-                <a href="#">Chương 2: Hành Trình</a>
-              </div>
-            </div>
-            <div class="row">
-              <div class="chapter">
-                <a href="#">Chương 3: Cạm Bẫy</a>
-              </div>
-              <div class="chapter">
-                <a href="#">Chương 4: Cuộc Đấu</a>
-              </div>
-            </div>
+          <div class="chapters" id="chapters-list">
+            <!-- Chương sẽ được hiển thị tại đây -->
           </div>
         </div>
-      </div>;
+      </div>
+    </form>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookID = urlParams.get("id");
+
+        if (!bookID) {
+          document.getElementById("book-name").innerText =
+            "Không có ID truyện trong URL";
+          document.getElementById("book-image").innerHTML =
+            "<p>Không thể tải thông tin</p>";
+          return;
+        }
+
+        // Kiểm tra bookID
+        console.log(bookID);
+
+        // Gọi API để lấy thông tin truyện
+        fetch(`http://localhost:8081/api/info/${bookID}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Không tìm thấy truyện hoặc lỗi server");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data); // Kiểm tra dữ liệu trả về
+            if (data.name && data.avatar_url) {
+              document.getElementById("book-name").innerText = data.name;
+              document.getElementById(
+                "book-image"
+              ).innerHTML = `<img src="${data.avatar_url}" alt="${data.name}" />`;
+            } else {
+              document.getElementById("book-name").innerText =
+                "Không tìm thấy truyện";
+              document.getElementById("book-image").innerHTML = `<p>Lỗi: ${
+                data.message || "Không rõ nguyên nhân"
+              }</p>`;
+            }
+          })
+          .catch((err) => {
+            document.getElementById("book-name").innerText =
+              "Lỗi khi tải thông tin truyện";
+            document.getElementById(
+              "book-image"
+            ).innerHTML = `<p>${err.message}</p>`;
+          });
+
+        // Gọi API để lấy danh sách chương
+        fetch(`http://localhost:8081/api/chapters/${bookID}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Không tìm thấy chương hoặc lỗi server");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const chaptersList = document.getElementById("chapters-list");
+            let chapterNumber = 1; // Biến đếm cho số chương
+
+            if (data && data.chapters && data.chapters.length > 0) {
+              // Hiển thị danh sách chương
+              data.chapters.forEach((chapter) => {
+                if (chapter && chapter.Title) {
+                  const chapterElement = document.createElement("div");
+                  chapterElement.className = "chapter-item";
+
+                  // Tạo nội dung cho mỗi chương
+                  chapterElement.innerHTML = `
+            <div>
+              <a href="/chapter/${chapter.ID}">Chương ${chapterNumber}: ${chapter.Title}</a>
+              <button class="delete-btn" data-id="${chapter.ID}">Xóa</button>
+            </div>
+          `;
+
+                  // Thêm sự kiện xóa chương
+                  chapterElement
+                    .querySelector(".delete-btn")
+                    .addEventListener("click", () => {
+                      if (
+                        confirm(
+                          `Bạn có chắc muốn xóa chương "${chapter.Title}"?`
+                        )
+                      ) {
+                        // Gọi API xóa chương
+                        fetch(
+                          `http://localhost:8081/api/${bookID}/chapters/${chapter.ID}`,
+                          {
+                            method: "DELETE",
+                          }
+                        )
+                          .then((response) => {
+                            if (!response.ok) {
+                              throw new Error("Không thể xóa chương");
+                            }
+                            return response.json();
+                          })
+                          .then((result) => {
+                            alert(result.message || "Xóa chương thành công");
+                            chapterElement.remove(); // Xóa chương khỏi giao diện
+                          })
+                          .catch((err) => {
+                            alert(`Lỗi khi xóa chương: ${err.message}`);
+                          });
+                      }
+                    });
+
+                  chaptersList.appendChild(chapterElement);
+                  chapterNumber++; // Tăng số chương
+                } else {
+                  console.error("Chương không có title:", chapter);
+                }
+              });
+            } else {
+              chaptersList.innerHTML = "<p>Không có chương nào</p>";
+            }
+          })
+          .catch((err) => {
+            // Xử lý lỗi khi gọi API danh sách chương
+            document.getElementById(
+              "chapters-list"
+            ).innerHTML = `<p>${err.message}</p>`;
+          });
+      });
     </script>
     <!-- Link JavaScript -->
     <script src="/Static/smooth/dropdown.js"></script>
-    <script src="/Static/smooth/common.js"></script>
   </body>
 </html>

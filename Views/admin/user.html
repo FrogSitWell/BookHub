@@ -33,49 +33,122 @@
             <th>Thao tác</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>admin</td>
-            <td>stackskill2@gmail.com</td>
-            <td>1</td>
-            <td>
-              <button class="btn yellow">Sửa</button>
-              <button class="btn red">Xóa</button>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>thành hiếu nguyen</td>
-            <td>a123@gmail.com</td>
-            <td>2</td>
-            <td>
-              <button class="btn yellow">Sửa</button>
-              <button class="btn red">Xóa</button>
-            </td>
-          </tr>
-          <tr>
-            <td>7</td>
-            <td>Thỏ</td>
-            <td>hieuhunters2@gmail.com</td>
-            <td>3</td>
-            <td>
-              <button class="btn yellow">Sửa</button>
-              <button class="btn red">Xóa</button>
-            </td>
-          </tr>
-          <tr>
-            <td>8</td>
-            <td>Nam</td>
-            <td>nam410@gmail.com</td>
-            <td>3</td>
-            <td>
-              <button class="btn yellow">Sửa</button>
-              <button class="btn red">Xóa</button>
-            </td>
-          </tr>
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
+    <script>
+      // Hàm lấy danh sách người dùng
+      async function fetchUsers() {
+        try {
+          const response = await fetch("http://localhost:8081/api/users");
+          if (!response.ok) throw new Error("Failed to fetch users");
+          const users = await response.json();
+
+          // Hiển thị dữ liệu lên bảng
+          renderUserTable(users);
+        } catch (error) {
+          console.error(error);
+          alert("Có lỗi xảy ra khi lấy danh sách người dùng!");
+        }
+      }
+
+      // Hàm hiển thị dữ liệu người dùng vào bảng
+      function renderUserTable(users) {
+        const tbody = document.querySelector("table tbody");
+        tbody.innerHTML = ""; // Xóa dữ liệu cũ
+
+        users.forEach((user) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${user.id}</td>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${user.role_id}</td>
+            <td>
+              <button class="btn yellow" onclick="handleEdit(${user.id}, '${user.name}', '${user.email}', ${user.role_id})">Sửa</button>
+              <button class="btn red" onclick="handleDelete(${user.id})">Xóa</button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      // Hàm xóa người dùng
+      async function deleteUser(userId) {
+        try {
+          const response = await fetch(
+            `http://localhost:8081/api/users/${userId}`,
+            {
+              method: "DELETE",
+            }
+          );
+          if (!response.ok) throw new Error("Failed to delete user");
+
+          const result = await response.json();
+          alert(result.message);
+
+          // Cập nhật lại danh sách người dùng sau khi xóa
+          fetchUsers();
+        } catch (error) {
+          console.error(error);
+          alert("Có lỗi xảy ra khi xóa người dùng!");
+        }
+      }
+
+      // Hàm sửa thông tin người dùng
+      async function updateUser(userId, updatedData) {
+        try {
+          const response = await fetch(
+            `http://localhost:8081/api/users/${userId}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(updatedData),
+            }
+          );
+
+          if (!response.ok) throw new Error("Failed to update user");
+
+          const user = await response.json();
+          alert("Cập nhật người dùng thành công!");
+
+          // Cập nhật lại danh sách người dùng sau khi sửa
+          fetchUsers();
+        } catch (error) {
+          console.error(error);
+          alert("Có lỗi xảy ra khi sửa người dùng!");
+        }
+      }
+
+      // Hàm xử lý sự kiện xóa
+      function handleDelete(userId) {
+        if (confirm("Bạn có chắc chắn muốn xóa người dùng này?")) {
+          deleteUser(userId);
+        }
+      }
+
+      // Hàm xử lý sự kiện sửa
+      function handleEdit(userId, name, email, roleId) {
+        const updatedName = prompt("Tên mới:", name);
+        const updatedEmail = prompt("Email mới:", email);
+        const updatedRoleId = prompt("Role ID mới:", roleId);
+
+        if (updatedName && updatedEmail && updatedRoleId) {
+          const updatedData = {
+            name: updatedName,
+            email: updatedEmail,
+            role_id: parseInt(updatedRoleId),
+          };
+          updateUser(userId, updatedData);
+        }
+      }
+
+      // Tự động lấy danh sách người dùng khi tải trang
+      document.addEventListener("DOMContentLoaded", () => {
+        fetchUsers();
+      });
+    </script>
   </body>
 </html>

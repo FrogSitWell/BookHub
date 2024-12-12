@@ -8,6 +8,7 @@ type Chapter struct {
     Book          Book      `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
     ChapterNumber int       `gorm:"not null"`
     Title         string    `gorm:"type:varchar(255);not null"`
+    SortOrder     int64     `gorm:"not null"`
     ContentURL    string    `gorm:"type:text;not null"`
     CreatedAt     time.Time `gorm:"autoCreateTime"`
 }

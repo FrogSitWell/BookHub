@@ -24,40 +24,7 @@
     <div class="container">
       <div class="category-list">
         <h2>Danh sách Thể loại</h2>
-        <ul>
-          <li>
-            Huyền ảo <button class="btn red">Xóa</button>
-            <button class="btn yellow">Sửa</button>
-          </li>
-          <li>
-            Tình cảm <button class="btn red">Xóa</button>
-            <button class="btn yellow">Sửa</button>
-          </li>
-          <li>
-            Tiên hiệp <button class="btn red">Xóa</button>
-            <button class="btn yellow">Sửa</button>
-          </li>
-          <li>
-            Đam mỹ <button class="btn red">Xóa</button>
-            <button class="btn yellow">Sửa</button>
-          </li>
-          <li>
-            Võng du <button class="btn red">Xóa</button>
-            <button class="btn yellow">Sửa</button>
-          </li>
-          <li>
-            Đồng nhân <button class="btn red">Xóa</button>
-            <button class="btn yellow">Sửa</button>
-          </li>
-          <li>
-            Cạnh kỹ <button class="btn red">Xóa</button>
-            <button class="btn yellow">Sửa</button>
-          </li>
-          <li>
-            Kiếm hiệp <button class="btn red">Xóa</button>
-            <button class="btn yellow">Sửa</button>
-          </li>
-        </ul>
+        <ul></ul>
       </div>
 
       <div class="add-category">
@@ -69,13 +36,101 @@
             id="category-name"
             placeholder="Nhập tên thể loại"
           />
-
-          <label for="order">Thứ tự:</label>
-          <input type="number" id="order" placeholder="Nhập thứ tự" />
-
           <button type="submit" class="btn blue">Thêm Thể loại</button>
         </form>
       </div>
     </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const categoryList = document.querySelector(".category-list ul");
+
+        // Lấy danh sách thể loại
+        fetch("http://localhost:8081/api/genres")
+          .then((response) => response.json())
+          .then((data) => {
+            categoryList.innerHTML = data
+              .map(
+                (genre) => `
+                <li>
+                    ${genre.Name}
+                    <button class="btn red" onclick="deleteGenre(${genre.ID})">Xóa</button>
+                    <button class="btn yellow" onclick="editGenre(${genre.ID}, '${genre.Name}')">Sửa</button>
+                </li>
+            `
+              )
+              .join("");
+          });
+
+        // Hàm xóa thể loại
+        window.deleteGenre = function (id) {
+          fetch(`http://localhost:8081/api/genres/${id}`, {
+            method: "DELETE",
+          }).then((response) => {
+            if (response.ok) {
+              alert("Xóa thành công");
+              location.reload();
+            } else {
+              alert("Có lỗi xảy ra khi xóa");
+            }
+          });
+        };
+
+        // Hàm sửa thể loại
+        window.editGenre = function (id, oldName) {
+          const newName = prompt("Nhập tên thể loại mới:", oldName);
+          if (newName && newName !== oldName) {
+            fetch(`http://localhost:8081/api/genres/${id}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name: newName }),
+            }).then((response) => {
+              if (response.ok) {
+                alert("Cập nhật thành công");
+                location.reload();
+              } else {
+                alert("Có lỗi xảy ra khi cập nhật");
+              }
+            });
+          }
+        };
+
+        // Xử lý form thêm thể loại
+        document.querySelector("form").addEventListener("submit", function (e) {
+          e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+          const input = document.getElementById("category-name");
+          const genreName = input.value.trim();
+
+          if (!genreName) {
+            alert("Vui lòng nhập tên thể loại");
+            return;
+          }
+
+          // Gửi yêu cầu POST đến API
+          fetch("http://localhost:8081/api/genres", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: genreName }),
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.json();
+              } else {
+                return response.json().then((data) => {
+                  throw new Error(data.error || "Có lỗi xảy ra");
+                });
+              }
+            })
+            .then((data) => {
+              alert(`Thể loại "${data.name}" đã được thêm thành công!`);
+              input.value = ""; // Xóa nội dung nhập
+              location.reload(); // Tải lại danh sách
+            })
+            .catch((error) => {
+              alert(`Lỗi: ${error.message}`);
+            });
+        });
+      });
+    </script>
   </body>
 </html>
