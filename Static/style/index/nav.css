@@ -26,8 +26,142 @@ nav ul li a {
   width: 50px;
   height: auto;
 }
+/* Container của thanh tìm kiếm */
+.search-container {
+  position: relative; /* Để input hiển thị bên dưới */
+  display: inline-block; /* Bao gồm cả icon và input */
+}
+
+.search-icon {
+  font-size: 20px;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Input bị ẩn ban đầu */
+.search-input {
+  position: absolute; /* Input nằm độc lập bên dưới */
+  top: 20px; /* Khoảng cách từ icon đến input */
+  right: 0; /* Canh input về bên phải */
+  width: 250px; /* Độ rộng của input */
+  height: 40px; /* Chiều cao input */
+  border: 1px solid #ff0000; /* Viền màu đỏ */
+  border-radius: 5px;
+  padding: 0 10px;
+  font-size: 14px;
+  color: #333;
+  background-color: #ffffff;
+  opacity: 0; /* Ẩn input ban đầu */
+  pointer-events: none; /* Ngăn người dùng click */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(-10px); /* Input bắt đầu ở vị trí cao hơn */
+}
+
+/* Hover vào toàn bộ container */
+.search-container:hover .search-input {
+  opacity: 1; /* Hiển thị input */
+  pointer-events: auto; /* Cho phép tương tác */
+  transform: translateY(0); /* Input xuất hiện đúng vị trí */
+}
+
+.search-container:hover .search-icon {
+  color: #ff5722; /* Đổi màu icon khi hover */
+}
+/* Kết quả tìm kiếm */
+.autocomplete-results {
+  position: absolute;
+  top: 58px; /* Đặt kết quả ngay dưới ô input */
+  left: -225px;
+  width: 250px;
+  background-color: white;
+  border: 1px solid #ccc;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none; /* Ẩn kết quả khi không có tìm kiếm */
+}
+
+.autocomplete-results .result-item {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.autocomplete-results .result-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* Hiển thị kết quả khi có dữ liệu */
+.autocomplete-results.show {
+  display: block; /* Hiển thị kết quả tìm kiếm khi có dữ liệu */
+}
+
+/* Các hiệu ứng khác nếu cần */
+.autocomplete-results .result-item {
+  padding: 8px 10px;
+  font-size: 14px;
+  border-bottom: 1px solid #ddd; /* Tạo đường kẻ giữa các kết quả */
+}
+
+.autocomplete-results .result-item:last-child {
+  border-bottom: none; /* Loại bỏ đường kẻ ở cuối cùng */
+}
 
 /* Icon */
 .fas {
   margin-right: 5px;
+}
+/* Banner */
+.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+  background-color: #f5f5f5;
+}
+
+.banner img {
+  max-width: 78%; /* Hình ảnh sẽ không vượt quá chiều rộng của container */
+  height: auto; /* Duy trì tỉ lệ khung hình của hình ảnh */
+  object-fit: contain; /* Đảm bảo toàn bộ hình ảnh nằm gọn trong container */
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  nav ul {
+    justify-content: space-between; /* Trải đều các mục */
+    gap: 10px; /* Giảm khoảng cách giữa các mục */
+  }
+
+  .nav-logo {
+    width: 40px; /* Thu nhỏ logo */
+  }
+
+  nav ul li a {
+    font-size: 14px; /* Thu nhỏ font chữ */
+  }
+}
+
+@media (max-width: 480px) {
+  nav ul {
+    flex-direction: row; /* Vẫn giữ các mục trên cùng một dòng */
+    justify-content: space-between; /* Trải đều các mục */
+  }
+
+  nav ul li {
+    margin: 5px; /* Khoảng cách nhỏ hơn giữa các mục */
+  }
+
+  .nav-logo {
+    width: 30px; /* Thu nhỏ logo thêm */
+  }
+
+  nav ul li a {
+    font-size: 12px; /* Thu nhỏ hơn nữa cho màn hình rất nhỏ */
+  }
+  .banner img {
+    max-width: 100%; /* Hình ảnh sẽ không vượt quá chiều rộng của container */
+    height: auto; /* Duy trì tỉ lệ khung hình của hình ảnh */
+    object-fit: contain; /* Đảm bảo toàn bộ hình ảnh nằm gọn trong container */
+  }
 }

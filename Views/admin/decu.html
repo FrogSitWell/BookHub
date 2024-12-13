@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quản lý User</title>
+    <title>Quản lý truyện</title>
     <link rel="stylesheet" href="/Static/style/admin/user.css" />
     <link rel="stylesheet" href="/Static/style/admin/decu.css" />
   </head>
@@ -18,8 +18,8 @@
       <a href="/Views/admin/theloai.html">Quản lý thể loại</a>
       <a href="/Views/admin/user.html">Quản lý user</a>
       <a href="/Views/admin/slide.html">Quản lý Slide</a>
-      <a href="/Views/admin/decu.html">Đề cử</a>
-      <a href="/Views/admin/xephang.html">Xếp hạng</a>
+      <a href="/Views/admin/decu.html">Quản lý truyện</a>
+      <a href="/Views/admin/xephang.html">Quản lý báo cáo</a>
     </nav>
 
     <div class="container">
@@ -32,23 +32,149 @@
 
       <table>
         <tbody>
-          <tr>
-            <td>Tác phẩm 1</td>
-            <td><button class="edit-btn">Sửa</button></td>
-            <td><button class="delete-btn">Xóa</button></td>
-          </tr>
-          <tr>
-            <td>Tác phẩm 2</td>
-            <td><button class="edit-btn">Sửa</button></td>
-            <td><button class="delete-btn">Xóa</button></td>
-          </tr>
-          <tr>
-            <td>Tác phẩm 3</td>
-            <td><button class="edit-btn">Sửa</button></td>
-            <td><button class="delete-btn">Xóa</button></td>
-          </tr>
+          <!-- Bảng hiển thị sách sẽ được điền vào đây -->
         </tbody>
       </table>
+      <div id="pagination"></div>
     </div>
+
+    <script>
+      let currentPage = 1; // Trang hiện tại
+      const itemsPerPage = 5; // Số sách trên mỗi trang
+      let allBooks = []; // Lưu trữ tất cả sách từ API
+      let filteredBooks = []; // Lưu trữ danh sách sách sau khi tìm kiếm
+
+      // Lấy danh sách tất cả sách từ API
+      function getBooks() {
+        fetch("http://localhost:8081/api/books/") // Địa chỉ API của bạn
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to fetch books");
+            }
+            return response.json();
+          })
+          .then((books) => {
+            allBooks = books; // Lưu tất cả sách
+            filteredBooks = books; // Ban đầu, danh sách tìm kiếm giống danh sách gốc
+            displayBooks(); // Hiển thị sách theo trang hiện tại
+            setupPagination(); // Thiết lập phân trang
+          })
+          .catch((error) => {
+            console.error(error);
+            alert("Không thể lấy danh sách sách");
+          });
+      }
+
+      // Hiển thị sách theo trang hiện tại
+      function displayBooks() {
+        const table = document.querySelector("table tbody");
+        table.innerHTML = ""; // Xóa bảng hiện tại
+
+        // Tính toán chỉ mục bắt đầu và kết thúc của sách trong trang hiện tại
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const booksToDisplay = filteredBooks.slice(start, end); // Lấy sách cho trang hiện tại
+
+        // Tạo dòng mới trong bảng cho mỗi sách
+        booksToDisplay.forEach((book) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${book.Name}</td>
+            <td><button class="delete-btn" onclick="deleteBook(${book.ID})">Xóa</button></td>
+          `;
+          table.appendChild(row);
+        });
+      }
+
+      // Xóa sách
+      function deleteBook(bookID) {
+        fetch(`http://localhost:8081/api/books/${bookID}`, {
+          method: "DELETE",
+        })
+          .then((response) => {
+            if (response.ok) {
+              alert("Sách đã bị xóa");
+              getBooks(); // Tải lại danh sách sách sau khi xóa
+            } else {
+              alert("Không thể xóa sách");
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            alert("Lỗi khi xóa sách");
+          });
+      }
+
+      // Thiết lập phân trang
+      function setupPagination() {
+        const totalPages = Math.ceil(filteredBooks.length / itemsPerPage); // Tổng số trang
+        const paginationDiv = document.getElementById("pagination");
+        paginationDiv.innerHTML = ""; // Xóa các nút phân trang cũ
+
+        // Tạo nút "Trước"
+        const prevButton = document.createElement("button");
+        prevButton.textContent = "Trước";
+        prevButton.disabled = currentPage === 1; // Vô hiệu nút "Trước" nếu ở trang 1
+        prevButton.onclick = () => {
+          if (currentPage > 1) {
+            currentPage--;
+            displayBooks();
+            setupPagination();
+          }
+        };
+        paginationDiv.appendChild(prevButton);
+
+        // Tạo các nút trang
+        for (let i = 1; i <= totalPages; i++) {
+          const pageButton = document.createElement("button");
+          pageButton.textContent = i;
+          pageButton.disabled = i === currentPage; // Vô hiệu nút trang hiện tại
+          pageButton.onclick = () => {
+            currentPage = i;
+            displayBooks();
+            setupPagination();
+          };
+          paginationDiv.appendChild(pageButton);
+        }
+
+        // Tạo nút "Tiếp theo"
+        const nextButton = document.createElement("button");
+        nextButton.textContent = "Tiếp theo";
+        nextButton.disabled = currentPage === totalPages; // Vô hiệu nút "Tiếp theo" nếu ở trang cuối
+        nextButton.onclick = () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            displayBooks();
+            setupPagination();
+          }
+        };
+        paginationDiv.appendChild(nextButton);
+      }
+
+      // Tìm kiếm sách
+      function searchBooks(keyword) {
+        if (keyword.trim() === "2") {
+          // Nếu không có từ khóa, hiển thị tất cả sách
+          filteredBooks = allBooks;
+        } else {
+          // Lọc sách dựa trên từ khóa
+          filteredBooks = allBooks.filter((book) =>
+            book.Name.toLowerCase().includes(keyword.toLowerCase())
+          );
+        }
+        currentPage = 1; // Reset về trang đầu tiên
+        displayBooks(); // Hiển thị sách
+        setupPagination(); // Cập nhật phân trang
+      }
+
+      // Lắng nghe sự kiện nhập vào ô tìm kiếm
+      document.getElementById("search").addEventListener("keyup", (e) => {
+        const keyword = e.target.value;
+        searchBooks(keyword); // Gọi hàm tìm kiếm
+      });
+
+      // Gọi hàm khi trang được tải
+      window.onload = getBooks;
+    </script>
   </body>
 </html>

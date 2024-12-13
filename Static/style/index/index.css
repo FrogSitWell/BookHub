@@ -127,6 +127,7 @@ button:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
   width: 300px;
+  flex: 1 1 calc(33.333% - 20px); /* Responsive layout */
 }
 
 .truyen-item img {
@@ -163,9 +164,39 @@ button:hover {
 }
 
 .truyen-moi h3 {
+  font-size: 3vw;
   font-size: 1.8rem;
   text-align: center;
   margin-bottom: 15px;
+}
+
+/* Thêm phân biệt bảng trong Truyện Mới Cập Nhật */
+.truyen-moi table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-top: 10px;
+  font-size: 1rem;
+  background-color: #f9f9f9; /* Màu nền nhẹ cho bảng */
+  border-radius: 0px; /* Bo góc bảng */
+  overflow: hidden; /* Đảm bảo các góc bo không bị vỡ */
+}
+
+.truyen-moi th,
+.truyen-moi td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 0px solid #ddd;
+}
+
+.truyen-moi th {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.truyen-moi tr:hover {
+  background-color: #f1f1f1;
 }
 
 /* Xếp Hạng */
@@ -186,6 +217,7 @@ button:hover {
   display: flex;
   gap: 20px;
   justify-content: space-between;
+  flex-wrap: wrap; /* Đảm bảo responsive */
 }
 
 .ranking-box {
@@ -193,7 +225,7 @@ button:hover {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 15px;
-  width: 30%;
+  width: calc(33.333% - 20px); /* Responsive */
 }
 
 .ranking-box h4 {
@@ -213,4 +245,35 @@ button:hover {
   font-size: 1rem;
   margin: 5px 0;
   color: #666;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .truyen-item {
+    flex: 1 1 100%; /* Chuyển sang chiều rộng đầy đủ */
+  }
+
+  .ranking-box {
+    width: 100%; /* Chiều rộng đầy đủ trên màn hình nhỏ */
+  }
+}
+
+@media (max-width: 576px) {
+  header {
+    padding: 10px;
+    text-align: left; /* Căn trái cho header */
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  .truyen-moi th,
+  .truyen-moi td {
+    font-size: 0.7rem; /* Kích thước chữ của bảng thay đổi theo độ rộng viewport */
+  }
+  .truyen-de-cu h3,
+  .bang-xep-hang h3 {
+    font-size: 1.5rem; /* Giảm kích thước chữ trên màn hình nhỏ */
+  }
 }
