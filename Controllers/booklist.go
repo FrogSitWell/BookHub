@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 func GetBooksByUser(c *gin.Context) {
-	// Lấy userID từ context
+    // Lấy userID từ context
     userID, exists := c.Get("userID")
     if !exists {
         c.JSON(http.StatusBadRequest, gin.H{"message": "User ID not found"})
@@ -23,15 +23,9 @@ func GetBooksByUser(c *gin.Context) {
     }
 
     var books []Models.Book
-    // Truy vấn các sách của người dùng từ cơ sở dữ liệu
-    if err := database.DB.Where("user_id = ?", userIDStr).Find(&books).Error; err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to retrieve books"})
-        return
-    }
 
-
-	 // Lấy danh sách sách với join với bảng Genre để có tên thể loại
-	 if err := database.DB.Preload("Genre").Where("user_id = ?", userID).Find(&books).Error; err != nil {
+    // Truy vấn sách với Preload Genre và Status
+    if err := database.DB.Preload("Genre").Preload("Status").Where("user_id = ?", userIDStr).Find(&books).Error; err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to retrieve books"})
         return
     }

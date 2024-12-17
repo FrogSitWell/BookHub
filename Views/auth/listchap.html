@@ -43,12 +43,15 @@
         </div>
         <div class="chapters-list">
           <h2>Danh Sách Chương</h2>
-          <div class="chapters" id="chapters-list">
-            <!-- Chương sẽ được hiển thị tại đây -->
-          </div>
+          <table id="chapters-table">
+            <tbody>
+              <!-- Các hàng chương sẽ được thêm động bởi script -->
+            </tbody>
+          </table>
         </div>
       </div>
     </form>
+
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -96,81 +99,106 @@
             ).innerHTML = `<p>${err.message}</p>`;
           });
 
-        // Gọi API để lấy danh sách chương
-        fetch(`http://localhost:8081/api/chapters/${bookID}`)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Không tìm thấy chương hoặc lỗi server");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            const chaptersList = document.getElementById("chapters-list");
-            let chapterNumber = 1; // Biến đếm cho số chương
+        // Các biến phân trang
+        let allChapters = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
 
-            if (data && data.chapters && data.chapters.length > 0) {
-              // Hiển thị danh sách chương
-              data.chapters.forEach((chapter) => {
-                if (chapter && chapter.Title) {
-                  const chapterElement = document.createElement("div");
-                  chapterElement.className = "chapter-item";
+        function loadChapters() {
+          fetch(`http://localhost:8081/api/chapters/${bookID}`)
+            .then((response) => response.json())
+            .then((data) => {
+              allChapters = data.chapters || []; // Gán dữ liệu vào allChapters
+              displayChapters();
+            })
+            .catch(() => {
+              document.getElementById("chapters-table").innerHTML = `
+        <tbody>
+          <tr>
+            <td colspan="3">Lỗi khi tải danh sách chương</td>
+          </tr>
+        </tbody>
+      `;
+            });
+        }
 
-                  // Tạo nội dung cho mỗi chương
-                  chapterElement.innerHTML = `
-            <div>
-              <a href="/chapter/${chapter.ID}">Chương ${chapterNumber}: ${chapter.Title}</a>
-              <button class="delete-btn" data-id="${chapter.ID}">Xóa</button>
-            </div>
-          `;
+        function displayChapters() {
+          const start = (currentPage - 1) * itemsPerPage;
+          const end = start + itemsPerPage;
+          const paginatedChapters = allChapters.slice(start, end);
 
-                  // Thêm sự kiện xóa chương
-                  chapterElement
-                    .querySelector(".delete-btn")
-                    .addEventListener("click", () => {
-                      if (
-                        confirm(
-                          `Bạn có chắc muốn xóa chương "${chapter.Title}"?`
-                        )
-                      ) {
-                        // Gọi API xóa chương
-                        fetch(
-                          `http://localhost:8081/api/${bookID}/chapters/${chapter.ID}`,
-                          {
-                            method: "DELETE",
-                          }
-                        )
-                          .then((response) => {
-                            if (!response.ok) {
-                              throw new Error("Không thể xóa chương");
-                            }
-                            return response.json();
-                          })
-                          .then((result) => {
-                            alert(result.message || "Xóa chương thành công");
-                            chapterElement.remove(); // Xóa chương khỏi giao diện
-                          })
-                          .catch((err) => {
-                            alert(`Lỗi khi xóa chương: ${err.message}`);
-                          });
-                      }
-                    });
+          const chaptersTable = document.getElementById("chapters-table");
+          const tbody = chaptersTable.querySelector("tbody");
+          tbody.innerHTML = "";
 
-                  chaptersList.appendChild(chapterElement);
-                  chapterNumber++; // Tăng số chương
-                } else {
-                  console.error("Chương không có title:", chapter);
-                }
-              });
-            } else {
-              chaptersList.innerHTML = "<p>Không có chương nào</p>";
-            }
-          })
-          .catch((err) => {
-            // Xử lý lỗi khi gọi API danh sách chương
-            document.getElementById(
-              "chapters-list"
-            ).innerHTML = `<p>${err.message}</p>`;
+          paginatedChapters.forEach((chapter) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+      <td>${chapter.Title}</td>
+      <td>
+        <a href="/Views/auth/fixchap.html?id=${chapter.ID}" class="btn green">Sửa</a>
+        <button class="delete-btn" data-id="${chapter.ID}">Xóa</button>
+      </td>
+    `;
+            tbody.appendChild(row);
           });
+
+          // Gắn sự kiện xóa
+          document.querySelectorAll(".delete-btn").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              deleteChapter(e.target.dataset.id);
+            });
+          });
+        }
+
+        loadChapters();
+
+        // Hàm xóa chương
+        function deleteChapter(chapterId) {
+          fetch(
+            `http://localhost:8081/api/books/${bookID}/chapters/${chapterId}`,
+            {
+              method: "DELETE",
+            }
+          )
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Lỗi khi xóa chương");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              alert(data.message || "Xóa chương thành công");
+              // Giữ lại bookID trong URL và tải lại trang
+              window.location.href = `/Views/auth/listchap.html?id=${bookID}`;
+            })
+            .catch((err) => {
+              alert(err.message || "Không thể xóa chương");
+            });
+        }
+
+        // Hàm tạo phân trang
+        function setupPagination() {
+          const pageCount = Math.ceil(allChapters.length / itemsPerPage);
+          const pagination = document.getElementById("pagination");
+          pagination.innerHTML = ""; // Xóa phân trang cũ
+
+          for (let i = 1; i <= pageCount; i++) {
+            const pageButton = document.createElement("button");
+            pageButton.textContent = i;
+            pageButton.onclick = () => changePage(i); // Gọi changePage khi nhấn nút
+            pagination.appendChild(pageButton);
+          }
+        }
+
+        // Hàm chuyển trang
+        function changePage(page) {
+          currentPage = page; // Cập nhật trang hiện tại
+          displayChapters(); // Hiển thị lại danh sách chương của trang mới
+        }
+
+        // Tải danh sách chương khi trang load
+        loadChapters();
       });
     </script>
     <!-- Link JavaScript -->

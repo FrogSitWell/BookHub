@@ -14,13 +14,16 @@ func SetupRoutes(r *gin.Engine) {
 	{
 		api.POST("/register", Controllers.RegisterUser)
 		api.POST("/login", Controllers.LoginUser)
-		api.GET("/genre",Controllers.GetGenre)
+		api.GET("/genre",Controllers.GetGenre)// lấy thể loại truyện...
+		api.GET("/statuses", Controllers.GetStatus)// lấy danh sách trạng thái 
 		api.DELETE("/:id", Controllers.DeleteBook)
 		api.POST("/chapters", Controllers.AddChapter) 
-		api.GET("/name/:id",Controllers.GetBooksName)
-		api.GET("/info/:id",Controllers.GetIaN)
-		api.GET("/chapters/:id",Controllers.GetChapters)
-		api.DELETE("/:id/chapters/:chapterID", Controllers.DeleteChapter)
+		api.GET("/name/:id",Controllers.GetBooksName) // lấy tên sách trong getbookname
+		api.GET("/info/:id",Controllers.GetIaN)//lấy thông tin sách 
+		api.GET("/chapters/:id",Controllers.GetChapters)//lấy danh sách chương tại listchap
+		api.GET("/chapters/details/:chapterId",Controllers.GetChapterByID)// lấy chi tiết chương tại fixchap
+		api.PUT("/chapters/details/:chapterId", Controllers. UpdateChapter)// update nội dung chi tiết tại fixchap
+		api.DELETE("/books/:id/chapters/:chapterId", Controllers.DeleteChapter)
 		api.GET("/genres", Controllers.GetGenres)       // Lấy danh sách thể loại
 		api.DELETE("/genres/:id", Controllers.DeleteGenre)
 		api.PUT("/genres/:id", Controllers.UpdateGenre)

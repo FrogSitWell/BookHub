@@ -75,3 +75,17 @@
   outline: none;
   transition: border-color 0.3s ease;
 }
+/* Định dạng input[type="number"] */
+.form-group input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input[type="number"]:focus {
+  border-color: #007bff; /* Màu viền khi focus */
+}

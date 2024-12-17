@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="/Static/style/auther/homeauth.css" />
     <link rel="stylesheet" href="/Static/style/auther/navauth.css" />
     <link rel="stylesheet" href="/Static/style/auther/newchap.css" />
-    <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -34,40 +33,54 @@
       </nav>
     </header>
     <!-- Nội dung chính -->
-    <div class="form-container">
-      <form id="add-chapter-form">
-        <div class="form-group">
-          <label for="ten-truyen">Tên truyện</label>
-          <input
-            type="text"
-            id="ten-truyen"
-            name="ten-truyen"
-            placeholder="Nhập tên truyện"
-          />
-        </div>
-        <div class="form-group">
-          <label for="ten-chuong">Tên chương</label>
-          <!-- Changed to match the id "ten-chuong" -->
-          <input
-            type="text"
-            id="ten-chuong"
-            name="ten-chuong"
-            placeholder="Nhập tên chương"
-          />
-        </div>
-        <div class="form-group">
-          <label for="gioi-thieu">Nội dung</label>
-          <textarea
-            id="gioi-thieu"
-            name="gioi-thieu"
-            placeholder="Nhập nội dung"
-          ></textarea>
-        </div>
-        <button type="submit">Thêm chương</button>
-      </form>
+      <div class="form-container">
+        <form id="add-chapter-form">
+          <div class="form-group">
+            <label for="ten-truyen">Tên truyện</label>
+            <input
+              type="text"
+              id="ten-truyen"
+              name="ten-truyen"
+              placeholder="Nhập tên truyện"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="ten-chuong">Tên chương</label>
+            <input
+              type="text"
+              id="ten-chuong"
+              name="ten-chuong"
+              placeholder="Nhập tên chương"
+              required
+            />
+          </div>   
+          <div class="form-group">
+            <label for="gioi-thieu">Nội dung</label>
+            <textarea
+              id="gioi-thieu"
+              name="gioi-thieu"
+              placeholder="Nhập nội dung"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="sort-order">Thứ tự chương</label>
+            <input
+              type="number"
+              id="sort-order"
+              name="sort-order"
+              placeholder="Nhập thứ tự chương"
+              min="1"
+              required
+            />
+          </div>
+          <button type="submit">Thêm chương</button>
+        </form>
+      </div>
+
     </div>
     <script>
-      // Khi tải trang, tự động lấy tên truyện từ API và hiển thị trong input
+        // Khi tải trang, tự động lấy tên truyện từ API và hiển thị trong input
       const params = new URLSearchParams(window.location.search);
       const bookId = params.get("id");
 
@@ -93,56 +106,68 @@
       }
 
       // Xử lý khi submit form để thêm chương mới
+   // Xử lý khi submit form để thêm chương mới
       document
-        .getElementById("add-chapter-form")
-        .addEventListener("submit", async (event) => {
-          event.preventDefault(); // Ngăn form reload trang
+      .getElementById("add-chapter-form")
+      .addEventListener("submit", async (event) => {
+        event.preventDefault(); // Ngăn reload trang
 
-          // Lấy giá trị từ form
-          const chapterName = document.getElementById("ten-chuong").value;
-          const content = document.getElementById("gioi-thieu").value;
+        // Lấy giá trị từ form
+        const chapterName = document.getElementById("ten-chuong").value;
+        const content = document.getElementById("gioi-thieu").value;
+        let sortOrder = document.getElementById("sort-order").value || 0; // Lấy thứ tự chương (default là 0 nếu không có)
 
-          if (!bookId || !chapterName || !content) {
-            alert("Vui lòng điền đầy đủ thông tin!");
-            return;
-          }
+        if (!bookId || !chapterName || !sortOrder) {
+          alert("Vui lòng điền đầy đủ thông tin!");
+          return;
+        }
 
-          // Gửi dữ liệu đến API backend
-          try {
-            const response = await fetch("http://localhost:8081/api/chapters", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                bookId: parseInt(bookId),
-                chapterName: chapterName,
-                content: content,
-              }),
-            });
+        // Gửi dữ liệu đến API backend
+        try {
+          const response = await fetch("http://localhost:8081/api/chapters", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              bookId: parseInt(bookId),
+              chapterName: chapterName,
+              content: content,
+              sortOrder: parseInt(sortOrder), // Chuyển sortOrder thành số
+            }),
+          });
 
-            const result = await response.json();
+          const result = await response.json();
 
-            if (response.ok) {
-              alert("Thêm chương thành công!");
-              console.log("Response từ server:", result);
+          if (response.ok) {
+            alert("Thêm chương thành công!");
+            console.log("Response từ server:", result);
 
-              // Chuyển hướng về danh sách truyện
-              window.location.href =
-                "http://127.0.0.1:5500/Views/auth/listtruyen.html";
+            // Chuyển hướng về danh sách truyện
+            window.location.href =
+              "http://127.0.0.1:5500/Views/auth/listtruyen.html";
+          } else if (response.status === 409 && result.suggestedSortOrder) {
+            // Xử lý nếu vị trí sortOrder đã tồn tại
+            const userConfirmed = confirm(
+              `Vị trí thứ tự chương (${sortOrder}) đã tồn tại. Hệ thống gợi ý vị trí tiếp theo (${result.suggestedSortOrder}). Bạn có muốn sử dụng không?`
+            );
+            if (userConfirmed) {
+              document.getElementById("sort-order").value =
+                result.suggestedSortOrder; // Gán giá trị mới vào form
             } else {
-              console.error("Lỗi từ server:", result);
-              alert("Thêm chương thất bại: " + result.message);
+              alert("Vui lòng chọn vị trí khác và thử lại.");
             }
-          } catch (error) {
-            console.error("Lỗi kết nối:", error);
-            alert("Không thể kết nối đến server. Vui lòng thử lại.");
+          } else {
+            alert("Thêm chương thất bại: " + result.message);
           }
-        });
+        } catch (error) {
+          console.error("Lỗi kết nối:", error);
+          alert("Không thể kết nối đến server. Vui lòng thử lại.");
+        }
+      });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- Link JavaScript -->
-    <script src="/Static/smooth/ckeditbook.js"></script>
     <script src="/Static/smooth/common.js"></script>
     <script src="/Static/smooth/dropdown.js"></script>
   </body>

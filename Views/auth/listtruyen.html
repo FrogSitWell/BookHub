@@ -44,6 +44,7 @@
             <th>Thể loại</th>
             <th>Số Chương</th>
             <th>Tác giả</th>
+            <th>Trạng thái</th>
             <th>Thao tác</th>
           </tr>
         </thead>
@@ -102,6 +103,7 @@
             <td>${book.Genre.Name}</td>
             <td>${book.TotalChapters}</td>
             <td>${book.Author}</td>
+           <td>${book.Status.StatusName}</td>
             <td>
               <button class="btn blue" onclick="window.location.href='/Views/auth/listchap.html?id=' + (${book.ID})">Danh Sách Chương</button>
               <button class="btn yellow" onclick="window.location.href='/Views/auth/fixtruyen.html?id=' + (${book.ID})">Sửa</button>

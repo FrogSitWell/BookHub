@@ -45,11 +45,11 @@ func GetBookByID(c *gin.Context) {
 	bookID := c.Param("id")
 	var book Models.Book
 
-	// Tìm sách theo ID
-	if err := database.DB.Preload("Genre").First(&book, bookID).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Book not found"})
-		return
-	}
+	// Tìm sách theo ID và preload cả thông tin Genre và Status
+    if err := database.DB.Preload("Genre").Preload("Status").First(&book, bookID).Error; err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "Book not found"})
+        return
+    }
 
 	c.JSON(http.StatusOK, book)
 }
@@ -78,6 +78,7 @@ func UpdateBook(c *gin.Context) {
     book.Description = updatedBook.Description
     book.GenreID = updatedBook.GenreID
     book.AvatarURL = updatedBook.AvatarURL
+	book.StatusID = updatedBook.StatusID
 
     if result := database.DB.Save(&book); result.Error != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"message": "Có lỗi khi cập nhật sách"})
@@ -95,4 +96,23 @@ func GetGenre(c *gin.Context) {
         return
     }
     c.JSON(http.StatusOK, genres) // Trả về danh sách thể loại cùng với sách
+}
+
+func GetStatus(c *gin.Context) {
+    var statuses []Models.Status
+
+    // Truy vấn tất cả trạng thái từ cơ sở dữ liệu
+    if err := database.DB.Model(&Models.Status{}).Find(&statuses).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to retrieve statuses"})
+        return
+    }
+
+    // Nếu không có trạng thái nào
+    if len(statuses) == 0 {
+        c.JSON(http.StatusOK, gin.H{"message": "No statuses found"})
+        return
+    }
+
+    // Trả về danh sách trạng thái
+    c.JSON(http.StatusOK, gin.H{"statuses": statuses})
 }

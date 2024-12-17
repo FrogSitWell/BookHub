@@ -11,6 +11,8 @@ type Book struct {
     TotalChapters int         `gorm:"not null"`
     GenreID       uint        `gorm:"not null"`
     Genre         Genre       `gorm:"foreignKey:GenreID;constraint:OnDelete:CASCADE"`
+    StatusID      uint        `gorm:"not null;"`           // Cột StatusID
+    Status        Status      `gorm:"foreignKey:StatusID"`   
     UserID        uint        `gorm:"not null"`
     AverageRate   float64     `gorm:"default:0"`
     User          User        `gorm:"foreignKey:UserID"`

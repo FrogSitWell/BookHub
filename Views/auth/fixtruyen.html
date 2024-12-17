@@ -29,7 +29,6 @@
           </a>
           <ul class="dropdown-menu">
             <li><a href="/Views/homepage/login.html">Đăng Xuất</a></li>
-            <li><a href="/Views/auth/newtruyen.htm">Thêm Truyện Mới</a></li>
             <li><a href="/Views/auth/newchap.html">Thêm Bản Thảo</a></li>
             <li><a href="/Views/auth/listtruyen.html">Danh Sách Truyện</a></li>
           </ul>
@@ -73,35 +72,34 @@
           <label for="category-dropdown">Thể loại</label>
           <select id="category-dropdown" name="the-loai">
             <option value="" disabled selected>Vui lòng chọn</option>
-            <!-- Các tùy chọn sẽ được thêm động từ JavaScript -->
           </select>
         </div>
 
-        <button type="submit">Cập Nhập</button>
+        <div class="form-group">
+          <label for="status-dropdown">Trạng thái</label>
+          <select id="status-dropdown" name="status">
+            <option value="" disabled selected>Vui lòng chọn trạng thái</option>
+          </select>
+        </div>
+
+        <button type="submit">Cập Nhật</button>
       </form>
     </div>
+
     <script>
-      // Lấy ID từ URL
       const urlParams = new URLSearchParams(window.location.search);
       const bookId = urlParams.get("id");
-      console.log(bookId); // Kiểm tra giá trị bookId
 
-      // Lấy thể loại
+      // Tải danh sách thể loại
       async function loadCategories() {
         try {
           const response = await fetch("http://localhost:8081/api/genre");
-          const genres = await response.json(); // API trả về danh sách thể loại
-          console.log("Genres loaded:", genres); // In ra danh sách thể loại
+          const genres = await response.json();
           const dropdown = document.getElementById("category-dropdown");
-
-          // Xóa các option cũ (nếu có)
-          dropdown.innerHTML = "";
-
-          // Duyệt qua danh sách thể loại và thêm vào dropdown
           genres.forEach((genre) => {
             const option = document.createElement("option");
-            option.value = genre.ID; // ID của thể loại
-            option.textContent = genre.Name; // Tên thể loại
+            option.value = genre.ID;
+            option.textContent = genre.Name;
             dropdown.appendChild(option);
           });
         } catch (error) {
@@ -109,60 +107,72 @@
         }
       }
 
-      // Gọi hàm khi DOM sẵn sàng
-      document.addEventListener("DOMContentLoaded", loadCategories);
+      // Tải danh sách trạng thái
+      async function loadStatuses() {
+        try {
+          const response = await fetch("http://localhost:8081/api/statuses");
+          const { statuses } = await response.json();
+          const dropdown = document.getElementById("status-dropdown");
+          statuses.forEach((status) => {
+            const option = document.createElement("option");
+            option.value = status.ID;
+            option.textContent = status.StatusName;
+            dropdown.appendChild(option);
+          });
+        } catch (error) {
+          console.error("Lỗi khi tải trạng thái:", error);
+        }
+      }
 
-      // Load dữ liệu ban đầu
-      fetch(`http://127.0.0.1:8081/api/books/${bookId}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Book not found");
-          }
-          return response.json();
-        })
-        .then((book) => {
-          console.log(book); // In ra đối tượng sách để kiểm tra
-          // Đổ dữ liệu lên form
+      // Tải dữ liệu sách từ ID
+      async function loadBookData() {
+        try {
+          const response = await fetch(
+            `http://localhost:8081/api/books/${bookId}`
+          );
+          if (!response.ok) throw new Error("Không tìm thấy sách");
+          const book = await response.json();
+
           document.getElementById("ten-truyen").value = book.Name;
           document.getElementById("gioi-thieu").value = book.Description;
           document.getElementById("ten-tac-gia").value = book.Author;
-
-          // Gán đúng GenreID vào dropdown
           document.getElementById("category-dropdown").value = book.GenreID;
+          document.getElementById("status-dropdown").value = book.StatusID;
 
-          // Hiển thị ảnh bìa nếu có
           if (book.AvatarURL) {
-            const imagePreview = document.getElementById("image-preview");
-            imagePreview.innerHTML = `<img src="${book.AvatarURL}" alt="Ảnh bìa" />`;
+            document.getElementById(
+              "image-preview"
+            ).innerHTML = `<img src="${book.AvatarURL}" alt="Ảnh bìa" />`;
           }
-        })
-        .catch((error) => console.error(error.message));
+        } catch (error) {
+          console.error(error.message);
+        }
+      }
 
-      // Cập nhật dữ liệu khi submit
+      // Gửi dữ liệu cập nhật
       document
         .getElementById("editBookForm")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault(); // Ngăn chặn hành động mặc định của form
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const updatedData = {
+            Name: document.getElementById("ten-truyen").value.trim(),
+            Author: document.getElementById("ten-tac-gia").value.trim(),
+            Description: document.getElementById("gioi-thieu").value.trim(),
+            GenreID: parseInt(
+              document.getElementById("category-dropdown").value
+            ),
+            StatusID: parseInt(
+              document.getElementById("status-dropdown").value
+            ),
+            AvatarURL: document
+              .getElementById("image-preview")
+              .querySelector("img")?.src,
+          };
 
           try {
-            // Lấy giá trị từ form
-            const updatedData = {
-              Name: document.getElementById("ten-truyen").value.trim(),
-              Author: document.getElementById("ten-tac-gia").value.trim(),
-              Description: document.getElementById("gioi-thieu").value.trim(),
-              GenreID: parseInt(
-                document.getElementById("category-dropdown").value
-              ), // Lấy ID từ dropdown
-              AvatarURL: document
-                .getElementById("image-preview")
-                .querySelector("img")?.src, // Lấy URL từ thẻ <img> nếu có
-            };
-
-            console.log(updatedData); // Kiểm tra dữ liệu được gửi đi
-
-            // Gửi yêu cầu cập nhật
             const response = await fetch(
-              `http://127.0.0.1:8081/api/books/${bookId}`,
+              `http://localhost:8081/api/books/${bookId}`,
               {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -170,22 +180,22 @@
               }
             );
 
-            // Xử lý kết quả trả về
             if (response.ok) {
               alert("Cập nhật thành công!");
-              window.location.href =
-                "http://127.0.0.1:5500/Views/auth/listtruyen.html"; // Quay lại trang danh sách
+              window.location.href = "listtruyen.html";
             } else {
-              const errorData = await response.json();
-              alert(
-                `Cập nhật thất bại: ${errorData.message || "Có lỗi xảy ra!"}`
-              );
+              alert("Cập nhật thất bại!");
             }
           } catch (err) {
-            alert("Đã xảy ra lỗi khi cập nhật! Vui lòng thử lại.");
-            console.error(err);
+            console.error("Lỗi khi cập nhật:", err);
           }
         });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadCategories();
+        loadStatuses();
+        loadBookData();
+      });
     </script>
 
     <!-- Link JavaScript -->

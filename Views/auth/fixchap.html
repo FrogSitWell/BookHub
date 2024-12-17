@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BOOKHUB</title>
+    <link rel="stylesheet" href="/Static/style/index/dropdown.css" />
+    <link rel="stylesheet" href="/Static/style/auther/homeauth.css" />
+    <link rel="stylesheet" href="/Static/style/auther/navauth.css" />
+    <link rel="stylesheet" href="/Static/style/auther/newchap.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <nav class="navbar">
+        <li class="logo">
+          <a href="/Views/homepage/index.html">
+            <img src="/Static/imagines/logo.png" alt="Logo" class="nav-logo" />
+          </a>
+        </li>
+        <li class="dropdown">
+          <a href="#"> <i class="fa-solid fa-user"></i> Tài Khoản </a>
+          <ul class="dropdown-menu">
+            <li><a href="/Views/homepage/login.html">Đăng Xuất</a></li>
+            <li><a href="/Views/auth/newtruyen.htm">Thêm Truyện Mới</a></li>
+            <li><a href="/Views/auth/listtruyen.html">Danh Sách Truyện</a></li>
+          </ul>
+        </li>
+      </nav>
+    </header>
+
+    <!-- Nội dung chính -->
+    <div class="form-container">
+      <form id="add-chapter-form">
+        <div class="form-group">
+          <label for="ten-chuong">Tên chương</label>
+          <input
+            type="text"
+            id="ten-chuong"
+            name="ten-chuong"
+            placeholder="Nhập tên chương"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="gioi-thieu">Nội dung</label>
+          <textarea
+            id="gioi-thieu"
+            name="gioi-thieu"
+            placeholder="Nhập nội dung"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="sort-order">Thứ tự chương</label>
+          <input
+            type="number"
+            id="sort-order"
+            name="sort-order"
+            placeholder="Nhập thứ tự chương"
+            min="1"
+            readonly
+          />
+        </div>
+        <button type="submit">Cập Nhập</button>
+      </form>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const chapterId = urlParams.get("id");
+
+        if (chapterId) {
+          // Gọi API để lấy dữ liệu chương
+          fetch(`http://localhost:8081/api/chapters/details/${chapterId}`)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Không thể lấy dữ liệu chương");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              if (data.error) {
+                alert("Chương không tồn tại.");
+              } else {
+                // Lấy dữ liệu chương từ Cloudinary
+                fetch(data.ContentURL)
+                  .then((response) => response.text()) // Chuyển dữ liệu thành text
+                  .then((htmlContent) => {
+                    // Xử lý HTML bằng DOMParser để lấy plain text
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(
+                      htmlContent,
+                      "text/html"
+                    );
+                    const plainText = doc.body.textContent || "";
+
+                    // Hiển thị dữ liệu chương lên form
+                    document.getElementById("ten-chuong").value =
+                      data.Title || "";
+                    document.getElementById("gioi-thieu").value =
+                      plainText || "";
+                    document.getElementById("sort-order").value =
+                      data.SortOrder || "";
+                  })
+                  .catch((error) => {
+                    console.error("Có lỗi khi tải dữ liệu chương:", error);
+                    alert("Lỗi tải dữ liệu chương.");
+                  });
+              }
+            })
+            .catch((error) => {
+              alert("Đã có lỗi xảy ra khi lấy dữ liệu chương.");
+              console.error(error);
+            });
+        } else {
+          alert("Không có id chương trong URL.");
+        }
+
+        // Xử lý sự kiện submit form
+        document
+          .getElementById("add-chapter-form")
+          .addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            // Lấy giá trị từ các trường input
+            const tenChuong = document.getElementById("ten-chuong").value;
+            const gioiThieu = document.getElementById("gioi-thieu").value;
+            const sortOrder = parseInt(
+              document.getElementById("sort-order").value,
+              10
+            );
+
+            // Kiểm tra sortOrder có phải là số hay không
+            if (isNaN(sortOrder)) {
+              alert("Thứ tự chương phải là số.");
+              return;
+            }
+
+            // Tạo đối tượng dữ liệu để gửi
+            const updatedData = {
+              Title: tenChuong,
+              ContentURL: gioiThieu,
+              SortOrder: sortOrder,
+            };
+
+            // Gửi yêu cầu PUT để cập nhật dữ liệu chương
+            fetch(`http://localhost:8081/api/chapters/details/${chapterId}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(updatedData), // Gửi dữ liệu trong body
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  return response.json().then((errorData) => {
+                    console.error("API Error:", errorData);
+                    alert("Cập nhật chương thất bại.");
+                  });
+                }
+                return response.json();
+              })
+              .then((data) => {
+                if (data.error) {
+                  alert("Cập nhật chương thất bại.");
+                } else {
+                  alert("Cập nhật thành công.");
+                  window.location.reload();
+                }
+              })
+              .catch((error) => {
+                console.error("Có lỗi khi cập nhật chương:", error);
+                alert("Đã có lỗi xảy ra khi cập nhật chương.");
+              });
+          });
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Link JavaScript -->
+    <script src="/Static/smooth/common.js"></script>
+    <script src="/Static/smooth/dropdown.js"></script>
+  </body>
+</html>

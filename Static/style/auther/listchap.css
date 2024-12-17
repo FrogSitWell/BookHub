@@ -1,7 +1,14 @@
 /* Giao diện tổng thể */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+}
+
 #story-form {
   font-family: Arial, sans-serif;
-  background-color: #ffffff;
+  background-color: #f4f4f9;
   color: #000000;
   padding: 20px;
 }
@@ -21,7 +28,7 @@
   padding: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  border: 2px solid #007bff; /* Màu viền nổi bật */
+  border: 2px solid #ffffff; /* Màu viền nổi bật */
 }
 
 /* Placeholder hình ảnh */
@@ -95,6 +102,7 @@
 }
 
 /* Nút xóa */
+/* Nút xóa */
 #story-form .delete-btn {
   background-color: #ff4d4f;
   color: #fff;
@@ -108,4 +116,26 @@
 
 #story-form .delete-btn:hover {
   background-color: #d9363e;
+}
+
+/* Nút màu vàng */
+#story-form .green {
+  background-color: #077e2f; /* Màu vàng */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+#story-form .green:hover {
+  background-color: #077e2f; /* Màu vàng khi hover */
+}
+
+/* Căn chỉnh nút nằm cạnh nhau */
+#story-form .btn {
+  display: inline-block; /* Nút sẽ nằm ngang */
+  margin-right: 10px; /* Khoảng cách giữa các nút */
 }

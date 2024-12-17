@@ -101,6 +101,7 @@ nav ul li a {
   padding: 8px 10px;
   font-size: 14px;
   border-bottom: 1px solid #ddd; /* Tạo đường kẻ giữa các kết quả */
+  text-align: left;
 }
 
 .autocomplete-results .result-item:last-child {
@@ -116,13 +117,14 @@ nav ul li a {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 5px;
   text-align: center;
   background-color: #f5f5f5;
+  margin-bottom: -30px;
 }
 
 .banner img {
-  max-width: 78%; /* Hình ảnh sẽ không vượt quá chiều rộng của container */
+  max-width: 61%; /* Hình ảnh sẽ không vượt quá chiều rộng của container */
   height: auto; /* Duy trì tỉ lệ khung hình của hình ảnh */
   object-fit: contain; /* Đảm bảo toàn bộ hình ảnh nằm gọn trong container */
 }
