@@ -2,6 +2,7 @@ footer {
   border-top: 1px solid #ccc; /* Đường kẻ ngang màu xám nhạt */
   padding: 20px 0; /* Khoảng cách bên trong */
   text-align: center; /* Canh giữa nội dung */
+  margin-top: 30px;
 }
 
 .footer-content {

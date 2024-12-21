@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BOOKHUB</title>
+    <link rel="stylesheet" href="/Static/style/index/index.css" />
+    <link rel="stylesheet" href="/Static/style/index/footer.css" />
+    <link rel="stylesheet" href="/Static/style/index/nav.css" />
+    <link rel="stylesheet" href="/Static/style/reader/find.css" />
+    <link rel="stylesheet" href="/Static/style/index/dropdown.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+<body>
+    <header>
+      <nav>
+        <ul>
+          <li class="logo">
+            <a href="/Views/homepage/indexuser.html"
+              ><img src="/Static/imagines/logo.png" alt="Logo" class="nav-logo"
+            /></a>
+          </li>
+          <li class="dropdown">
+            <a href="#">
+              <i class="fas fa-bars"></i> Thể Loại
+              <!-- Icon cho thể loại -->
+            </a>
+            <ul class="dropdown-menu" id="genre-list">
+            
+            </ul>
+          </li>
+          <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="searchInput" placeholder="Tên sách, tác giả...">
+            <div id="results" class="autocomplete-results"></div>
+        </div>
+          <li class="dropdown">
+            <a href="#">
+              <i class="fa-solid fa-user"></i> 
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/Views/homepage/login.html">Đăng Xuất</a></li>
+              <li><a href="/Views/homepage/register.html">Đăng Truyện</a></li>
+            </ul>
+          </li>
+          
+        </ul>
+      </nav>
+    </header>
+    <!-- Tìm kiếm -->
+    <div class="container-find">
+        <!-- Div chứa các filter -->
+        <div class="filter-section" id="status-section">
+          <h3>Tình trạng</h3>
+        </div>
+        <div class="filter-section" id="genre-section">
+          <h3>Thể loại</h3>
+        </div>
+
+        <!-- Số chương -->
+        <div class="filter-section">
+            <h3>Số chương</h3>
+            <button class="filter-button" data-chapter="50">&gt; 50</button>
+            <button class="filter-button" data-chapter="100">&gt; 100</button>
+            <button class="filter-button" data-chapter="200">&gt; 200</button>
+            <button class="filter-button" data-chapter="400">&gt; 400</button>
+            <button class="filter-button" data-chapter="600">&gt; 600</button>
+            <button class="filter-button" data-chapter="1000">&gt; 1000</button>
+        </div>
+    </div>
+    <div class="table-container" id="books-container">
+      
+    </div>
+    <div id="pagination">
+      <button id="firstPage" disabled>First</button>
+      <button id="prevPage" disabled>Prev</button>
+      <input type="text" id="currentPage" value="1" />
+      <button id="nextPage">Next</button>
+      <button id="lastPage">Last</button>
+    </div>
+    
+    <script src="/Static/smooth/nav.js"></script>
+    <script>
+      
+      let allBooks = [];  // Dùng để lưu trữ tất cả sách
+      let currentPage = 1;
+      const booksPerPage = 10;  // Mỗi trang chứa 10 truyện
+  
+      // Fetch tất cả sách và hiển thị mặc định
+      async function fetchAllBooks() {
+          try {
+              const response = await fetch('http://localhost:8081/api/booklists');
+              const data = await response.json();
+              if (data.books && Array.isArray(data.books)) {
+                  allBooks = data.books;  // Lưu danh sách sách vào biến toàn cục
+                  displayBooks(allBooks);  // Hiển thị tất cả sách
+              }
+          } catch (error) {
+              console.error('Error fetching books:', error);
+          }
+      }
+  
+      // Hiển thị sách trong giao diện
+      function displayBooks(books) {
+          const container = document.getElementById('books-container');
+          container.innerHTML = '';  // Xóa nội dung hiện tại
+  
+          if (books.length === 0) {
+              container.innerHTML = '<p>Không có sách nào phù hợp với bộ lọc.</p>';
+              return;
+          }
+  
+          books.forEach(book => {
+              const bookItem = document.createElement('div');
+              bookItem.classList.add('book-item');
+              bookItem.innerHTML = `
+                  <a href="https://vtruyen.com/truyen/${encodeURIComponent(book.Name)}" target="_blank" class="book-image">
+                      <img src="${book.AvatarURL}" alt="${book.Name}" class="book-poster" />
+                  </a>
+                  <div class="book-details">
+                      <a href="https://vtruyen.com/truyen/${encodeURIComponent(book.Name)}" target="_blank" class="book-title">${book.Name}</a>
+                      <p class="book-author">Tác giả: ${book.Author}</p>
+                      <p class="book-chapters">${book.TotalChapters} chương</p>
+                      <p class="book-description">${book.Description}</p>
+                      <div class="book-actions">
+                          <span class="book-genre">Thể loại: ${book.Genre ? book.Genre.Name : 'Không xác định'}</span>
+                          <button class="read-button">Đọc thử</button>
+                      </div>
+                  </div>
+              `;
+              container.appendChild(bookItem);
+          });
+      }
+  
+      // Lọc sách theo các tham số
+      async function fetchBooks(filters = {}) {
+          const queryString = new URLSearchParams(filters).toString();
+          const response = await fetch(`http://localhost:8081/api/filter?${queryString}`);
+          const data = await response.json();
+          console.log('API response data:', data);  // Log dữ liệu trả về từ API
+          displayBooks(data);  // Hiển thị sách ngay từ data
+      }
+  
+      // Fetch các tùy chọn lọc (status và genre)
+      async function fetchFilterOptions() {
+          try {
+              const response = await fetch('http://localhost:8081/api/filteroptions');
+              const data = await response.json();
+  
+              if (data.statuses && data.genres) {
+                  createFilterButtons(data.statuses, 'status-section', filterByStatus);
+                  createFilterButtons(data.genres, 'genre-section', filterByGenre);
+              }
+          } catch (error) {
+              console.error('Error fetching filter options:', error);
+          }
+      }
+  
+      // Tạo nút lọc cho status và genre
+      function createFilterButtons(items, sectionId, filterCallback) {
+          const section = document.getElementById(sectionId);
+          items.forEach(item => {
+              const button = document.createElement('button');
+              button.className = 'filter-button';
+              button.innerText = item.StatusName || item.Name;  // Đảm bảo rằng tên có tồn tại
+              button.onclick = () => {
+                  // Bỏ chọn tất cả nút trong section hiện tại
+                  document.querySelectorAll(`#${sectionId} .filter-button`).forEach(btn => btn.classList.remove('selected'));
+                  // Đánh dấu nút này là đã chọn
+                  button.classList.add('selected');
+                  filterCallback(item.ID);  // Lọc sách theo status/genre
+              };
+              section.appendChild(button);
+          });
+      }
+  
+      function filterByStatus(statusId) {
+          console.log('Filtering by status_id:', statusId);  // Log statusId
+          fetchBooks({ status_id: statusId });
+      }
+  
+      function filterByGenre(genreId) {
+          console.log('Filtering by genre_id:', genreId);  // Log genreId
+          fetchBooks({ genre_id: genreId });
+      }
+  
+      // Lọc theo số chương
+      function filterByChapter(total_chapters) {
+        console.log("Filtering by chapters greater than or equal to:", total_chapters)
+          fetchBooks({ min_chapters: total_chapters });
+      }
+      // Gán sự kiện cho các nút lọc
+      document.querySelectorAll('.filter-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const chapters = button.getAttribute('data-chapter');  // Lấy giá trị số chương từ data-chapter
+        filterByChapter(chapters);  // Gọi hàm lọc
+        });
+      });
+  
+      // Gọi các hàm khi trang được tải
+      fetchAllBooks();  // Fetch tất cả sách
+      fetchFilterOptions();  // Fetch các tùy chọn lọc
+  </script>
+  
+</body>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section about">
+        <p>
+          Đây là trang web truyện chuyên cung cấp các bộ truyện nổi tiếng, cập
+          nhật hàng ngày.
+        </p>
+      </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 BookHub. Nhâm Mạnh Cường.</p>
+    </div>
+  </footer>
+</html>

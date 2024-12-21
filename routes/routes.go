@@ -35,6 +35,9 @@ func SetupRoutes(r *gin.Engine) {
 		api.PUT("/users/:id", Controllers.UpdateUser)
 		api.DELETE("/users/:id", Controllers.DeleteUser)
 		api.GET("/search", Controllers.SearchBooks)
+		api.GET("/booklists", Controllers. GetBooklists)
+		api.GET("/filter", Controllers. FilterBooks)
+		api.GET("/filteroptions", Controllers.GetFilterOptions)
 	}
 	
 
