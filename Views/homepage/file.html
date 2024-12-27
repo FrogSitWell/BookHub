@@ -117,19 +117,24 @@
               const bookItem = document.createElement('div');
               bookItem.classList.add('book-item');
               bookItem.innerHTML = `
-                  <a href="https://vtruyen.com/truyen/${encodeURIComponent(book.Name)}" target="_blank" class="book-image">
-                      <img src="${book.AvatarURL}" alt="${book.Name}" class="book-poster" />
-                  </a>
-                  <div class="book-details">
-                      <a href="https://vtruyen.com/truyen/${encodeURIComponent(book.Name)}" target="_blank" class="book-title">${book.Name}</a>
-                      <p class="book-author">Tác giả: ${book.Author}</p>
-                      <p class="book-chapters">${book.TotalChapters} chương</p>
-                      <p class="book-description">${book.Description}</p>
-                      <div class="book-actions">
-                          <span class="book-genre">Thể loại: ${book.Genre ? book.Genre.Name : 'Không xác định'}</span>
-                          <button class="read-button">Đọc thử</button>
-                      </div>
-                  </div>
+                  <a href="http://127.0.0.1:5500/Views/homepage/read.html?id=${encodeURIComponent(book.ID)}" 
+                  target="_blank" 
+                  class="book-image">
+                    <img src="${book.AvatarURL}" alt="${book.Name}" class="book-poster" />
+                </a>
+                <div class="book-details">
+                    <a href="http://127.0.0.1:5500/Views/homepage/read.html?id=${encodeURIComponent(book.ID)}" 
+                      target="_blank" 
+                      class="book-title">${book.Name}</a>
+                    <p class="book-author">Tác giả: ${book.Author}</p>
+                    <p class="book-chapters">${book.TotalChapters} chương</p>
+                    <p class="book-description">${book.Description}</p>
+                    <div class="book-actions">
+                        <span class="book-genre">Thể loại: ${book.Genre ? book.Genre.Name : 'Không xác định'}</span>
+                        <button class="read-button">Đọc thử</button>
+                    </div>
+                </div>
+
               `;
               container.appendChild(bookItem);
           });

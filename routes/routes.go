@@ -38,6 +38,13 @@ func SetupRoutes(r *gin.Engine) {
 		api.GET("/booklists", Controllers. GetBooklists)
 		api.GET("/filter", Controllers. FilterBooks)
 		api.GET("/filteroptions", Controllers.GetFilterOptions)
+		api.GET("/decu", Controllers.GetBooksWithChapters)//lay truyen de cu trong indexuser
+		api.GET("/news", Controllers.GetLatestChapters)// lấy chương mới được post lên trong indexuser
+		api.GET("/book/:id", Controllers.Getinfo)//lấy thông tin truyện.
+		api.GET("/author/:id", Controllers.GetBooksByAuthor)//lấy thông tin sách cùng tác giả 
+		api.GET("/description/:id", Controllers.GetBookDescriptionByID)//lấy mô tả sách 
+		api.GET("/newchapter/:id", Controllers.GetTopChapters)
+		api.GET("/allchapter/:id", Controllers.GetAllChapters)
 	}
 	
 

@@ -124,7 +124,7 @@ nav ul li a {
 }
 
 .banner img {
-  max-width: 61%; /* Hình ảnh sẽ không vượt quá chiều rộng của container */
+  max-width: 1150px; /* Hình ảnh sẽ không vượt quá chiều rộng của container */
   height: auto; /* Duy trì tỉ lệ khung hình của hình ảnh */
   object-fit: contain; /* Đảm bảo toàn bộ hình ảnh nằm gọn trong container */
 }

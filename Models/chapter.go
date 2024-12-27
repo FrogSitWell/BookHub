@@ -10,5 +10,7 @@ type Chapter struct {
     Title         string    `gorm:"type:varchar(255);not null"`
     SortOrder     int64     `gorm:"not null"`
     ContentURL    string    `gorm:"type:text;not null"`
-    CreatedAt     time.Time `gorm:"autoCreateTime"`
+    CreatedAt     time.Time `gorm:"autoCreateTime"`                     // Thời gian tạo
+    UpdatedAt     time.Time `gorm:"autoUpdateTime"`
+    TimeAgo       string    `gorm:"-"` // Trường không lưu vào cơ sở dữ liệu
 }

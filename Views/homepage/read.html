@@ -30,49 +30,47 @@
               <i class="fas fa-bars"></i> Thể Loại
               <!-- Icon cho thể loại -->
             </a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Linh Hồn</a></li>
-              <li><a href="#">Kinh Dị</a></li>
-              <li><a href="#">Phiêu Lưu</a></li>
-              <li><a href="#">Khoa Học</a></li>
+            <ul class="dropdown-menu" id="genre-list">
+            
             </ul>
           </li>
-          <li>
-            <i class="fa fa-search"></i>
-            <input type="text" placeholder="Tìm kiếm tác giả, tên truy..." />
-          </li>
+          <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="searchInput" placeholder="Tên sách, tác giả...">
+            <div id="results" class="autocomplete-results"></div>
+        </div>
           <li class="dropdown">
             <a href="#">
-              <i class="fa-solid fa-user"></i> Name
-              <!-- Icon cho thể loại -->
+              <i class="fa-solid fa-user"></i> 
             </a>
             <ul class="dropdown-menu">
               <li><a href="/Views/homepage/login.html">Đăng Xuất</a></li>
               <li><a href="/Views/homepage/register.html">Đăng Truyện</a></li>
             </ul>
           </li>
+          
         </ul>
       </nav>
     </header>
-    <div class="banner">
-      <img src="/Static/imagines/banner.jpg" alt="Banner", width="1150px">
-    </div>
+     <div class="banner">
+      <img id="banner1" src="" alt="Banner" style="width: 100%; height: auto;">
+  </div>
     <!-- Nội dung chính -->
     <div class="container">
       <main>
         <section class="ds-truyen">
           <!-- Mỗi mục truyện -->
            
-          <div class="truyen-item1">
-            <img src="/Static/imagines/300.jpg" alt="Truyện 1" />
+          <div class="truyen-item1"id="book-info">
+            <img id="book-avatar" src="" alt="" />
             <div>
               <div class="info">
-                <h4>Nghịch Thiên Tà Thần</h4>
-                <p>Tác giả: Hoa Thảo Miu</p>
-                <p>Thể loại: Huyền Ảo</p>
-                <p>Tổng chương: 106</p>
-                <p>Trạng thái: đang cập nhập</p>
-                <p>Đánh giá:3.5/5</p>
+                <h4 id="book-name"></h4>
+                <p id="book-author"></p>
+                <p id="book-genre"></p>
+                <p id="book-total-chapters"></p>
+                <p id="book-status"></p>
+                <p id="book-rating"></p>
               </div>
               <!-- Di chuyển nút xuống đây -->
               <div class="btn">
@@ -97,31 +95,20 @@
               </div>
               <!--Truyen cùng tác giả-->
               <div class="truyen-tg">
-                  <h3>Truyện cùng tác giả</h3>
-                  <div class="content-scroll">
-                    <p><a href="https://example.com" target="_blank">Truyện 1</a></p>
-                    <p><a href="https://example.com" target="_blank">Truyện 2</a></p>
-                    <p><a href="https://example.com" target="_blank">Truyện 3</a></p>
-                    <p><a href="https://example.com" target="_blank">Truyện 4</a></p>
-                    <p><a href="https://example.com" target="_blank">Truyện 5</a></p>
-                    <p><a href="https://example.com" target="_blank">Truyện 5</a></p>
-                    <p><a href="https://example.com" target="_blank">Truyện 5</a></p>
-                    <p><a href="https://example.com" target="_blank">Truyện 5</a></p>
-                    <p><a href="https://example.com" target="_blank">Truyện 5</a></p>
-                    <p><a href="https://example.com" target="_blank">Truyện 5</a></p>
-                    <p><a href="https://example.com" target="_blank">Truyện 5</a></p>
-                    <!-- Thêm nhiều đoạn văn bản ở đây -->
+                <h3>Truyện cùng tác giả</h3>
+                <div class="content-scroll" id="related-books">
+                    <!-- Nội dung sẽ được thêm ở đây -->
                 </div>
               </div>
             </div>
           </div>
         </section>
         <section>
-          <div class="khoi-xam"id="section1">
-            <h4>Giới thiệu</h4>
+          <div class="khoi-xam" id="section1">
+              <h4>Giới thiệu</h4>
           </div>
           <div class="post">
-            <p id="post-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+              <p id="post-content">Đang tải nội dung...</p>
           </div>
         </section>
         <section>
@@ -136,41 +123,17 @@
                 <button id="reverse-btn"><img src="/Static/imagines/icon/up-down.png"class="icon-up-down" alt="Up Down Icon" /></button>
                 <table class="popup-table">
                   <tbody id="chapter-list">
-                    <tr>
-                      <td><a href="https://www.example1.com">Chương 1: hàhhafhhaf</a></td>
-                    </tr>
-                    <tr>
-                      <td><a href="https://www.example1.com">Chương 2: hàhhafhhaf</a></td>
-                    </tr>
-                    <tr>
-                      <td><a href="https://www.example1.com">Chương 3: hàhhafhhaf</a></td>
-                    </tr>
-                    <tr>
-                      <td><a href="https://www.example1.com">Chương 4: hàhhafhhaf</a></td>
-                    </tr>
-                    <tr>
-                      <td><a href="https://www.example1.com">Chương 5: hàhhafhhaf</a></td>
-                    </tr>
+                  <!-- Dữ liệu chương sẽ được chèn ở đây -->
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
-          <table>
-            <tr>
-              <td><a href="https://www.example1.com">Chương 1:hàhhafhhaf</a></td>
-              <td><a href="https://www.example1.com">Chương 2:hàhhafhhaf</a></td>
-              <td><a href="https://www.example1.com">Chương 3:hàhhafhhaf</a></td>
-            </tr>
+          <table >
+            <tbody id="top-chapters-row">
+              <!-- Dữ liệu chương sẽ được chèn ở đây -->
+            </tbody>
           </table>
-        </section>
-        <section>
-          <div class="khoi-xam1"id="section2">
-            <h4>Đánh Giá</h4>
-          </div>
-          <div class="post">
-            <p id="post-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-          </div>
         </section>
         <section>
           <div class="khoi-xam1"id="section3">
@@ -182,12 +145,18 @@
         </section>
       </main>
     </div>
-  </body>
-  <!-- Link JavaScript -->
+     <!-- Link JavaScript -->
   <script src="/Static/smooth/dropdown.js"></script>
   <script src="/Static/smooth/popup.js"></script>
   <script src="/Static/smooth/reverse-btn.js"></script>
   <script src="/Static/smooth/smooth.js"></script>
+  <script src="/Static/smooth/navuser.js"></script>
+  <script src="/Static/smooth/readinfo.js"></script>
+  <script>
+
+
+  </script>
+  </body>
   <!-- Footer -->
   <footer>
     <div class="footer-content">

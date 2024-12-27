@@ -60,13 +60,13 @@ main {
 
 .info h4 {
   margin: 0 0 10px 0; /* Tạo khoảng cách bên dưới tiêu đề */
-  font-size: 18px; /* Tùy chỉnh kích thước chữ */
+  font-size: 20px; /* Tùy chỉnh kích thước chữ */
 }
 
 .info p {
   margin: 5px 0; /* Tạo khoảng cách giữa các đoạn văn */
   color: #555; /* Màu chữ xám nhạt */
-  font-size: 14px; /* Kích thước chữ nhỏ hơn */
+  font-size: 18px; /* Kích thước chữ nhỏ hơn */
 }
 /*thanh gioi thieu */
 .khoi-xam {
@@ -93,7 +93,7 @@ main {
 
 .post p {
   margin: 0;
-  font-size: 14px;
+  font-size: 20px;
   color: #666;
 }
 

@@ -88,15 +88,7 @@
         <section class="truyen-de-cu">
           <h3>Truyện Đề Cử</h3>
           <div class="truyen-list">
-            <!-- Mỗi mục truyện -->
-            <div class="truyen-item">
-              <img src="/Static/imagines/300.jpg" alt="Truyện 1" />
-              <div class="info">
-                <h4>Nghịch Thiên Tà Thần</h4>
-                <p>Tác giả: Hoa Thảo Miu</p>
-                <p>Thể loại: Huyền Ảo</p>
-              </div>
-            </div>
+           
             <!-- Thêm các mục truyện khác tương tự -->
           </div>
         </section>
@@ -104,22 +96,19 @@
         <!-- Truyện Mới Cập Nhật -->
         <section class="truyen-moi">
           <h3>Truyện Mới Cập Nhật</h3>
-          <table>
-            <tr>
-              <th>Thể loại</th>
-              <th>Tên truyện</th>
-              <th>Chương</th>
-              <th>Tác giả</th>
-              <th>Ngày cập nhật</th>
-            </tr>
-            <tr>
-              <td>Huyền Ảo</td>
-              <td>Nghịch Thiên Tà Thần</td>
-              <td>Chương 106</td>
-              <td>Thanh Liên Nguyễn</td>
-              <td>1 ngày trước</td>
-            </tr>
-            <!-- Thêm các hàng khác tương tự -->
+          <table id="latest-chapters-table">
+            <thead>
+              <tr>
+                <th>Thể loại</th>
+                <th>Tên truyện</th>
+                <th>Chương</th>
+                <th>Tác giả</th>
+                <th>Ngày cập nhật</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Nội dung sẽ được thêm ở đây -->
+            </tbody>
           </table>
         </section>
 
@@ -155,13 +144,101 @@
         </section>
       </main>
     </div>  
+      <!-- Link JavaScript -->
+    <script src="/Static/smooth/dropdown.js"></script>
+    <script src="/Static/smooth/navuser.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+  // API URL
+  const apiURL = "http://localhost:8081/api/decu"; // Đường dẫn đến API của bạn
+
+  // Lấy danh sách truyện từ API
+  fetch(apiURL)
+    .then((response) => response.json())
+    .then((books) => {
+      const truyenList = document.querySelector(".truyen-list");
+
+      // Xóa nội dung cũ (nếu cần)
+      truyenList.innerHTML = "";
+      // Giới hạn danh sách hiển thị tối đa 6 truyện
+      const limitedBooks = books.slice(0, 6);
+
+      // Tạo nội dung mới từ API
+      books.forEach((book) => {
+        const truyenItem = document.createElement("div");
+        truyenItem.classList.add("truyen-item");
+
+        // Thêm ảnh bìa
+        const img = document.createElement("img");
+        img.src = book.AvatarURL || "/Static/imagines/default.jpg"; // Dùng ảnh mặc định nếu không có URL
+        img.alt = book.Name;
+
+        // Thêm thông tin truyện
+        const info = document.createElement("div");
+        info.classList.add("info");
+
+        const title = document.createElement("h4");
+        title.textContent = book.Name;
+
+        const author = document.createElement("p");
+        author.textContent = `Tác giả: ${book.Author  || "Không rõ"}`; // Thêm thông tin tác giả
+
+        const genre = document.createElement("p");
+        genre.textContent = `Thể loại: ${book.Genre.Name || "Không rõ"}`; // Thêm thông tin thể loại
+
+        // Gắn các phần tử con vào phần tử cha
+        info.appendChild(title);
+        info.appendChild(author);
+        info.appendChild(genre);
+        truyenItem.appendChild(img);
+        truyenItem.appendChild(info);
+
+        // Gắn phần tử vào danh sách
+        truyenList.appendChild(truyenItem);
+      });
+    })
+    .catch((error) => {
+      console.error("Lỗi khi lấy danh sách truyện:", error);
+    });
+});
+
+    </script>
+    <script>
+      // Hàm gọi API và hiển thị dữ liệu
+async function fetchLatestChapters() {
+  try {
+    const response = await fetch('http://localhost:8081/api/news');
+    if (!response.ok) {
+      throw new Error('Lỗi khi gọi API');
+    }
+
+    const chapters = await response.json();
+    const tableBody = document.querySelector('#latest-chapters-table tbody');
+    tableBody.innerHTML = '';
+
+    chapters.forEach((chapter) => {
+      const row = `
+        <tr>
+          <td>${chapter.genre}</td>
+          <td>${chapter.book_name}</td>
+          <td>${chapter.chapter_title}</td>
+          <td>${chapter.author}</td>
+          <td>${chapter.time_ago}</td>
+        </tr>
+      `;
+      tableBody.innerHTML += row;
+    });
+  } catch (error) {
+    console.error('Lỗi khi hiển thị chương mới:', error);
+  }
+}
+
+// Gọi hàm khi trang load
+document.addEventListener('DOMContentLoaded', fetchLatestChapters);
+
+    </Script>
   </body>
-  <!-- Link JavaScript -->
-  <script src="/Static/smooth/dropdown.js"></script>
-  <script src="/Static/smooth/navuser.js"></script>
-  <script>
-    
-  </script>
+
   <!-- Footer -->
   <footer>
     <div class="footer-content">
