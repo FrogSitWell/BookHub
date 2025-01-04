@@ -4,6 +4,7 @@ import (
 	"bookhub/Models"
 	"bookhub/database"
 	"strconv"
+	"time"
 
 	"net/http"
 
@@ -138,3 +139,92 @@ func GetAllChapters(c *gin.Context) {
     })
 }
 
+func GetNewChapter(c *gin.Context) {
+    chapterId := c.Param("chapterId")
+    id, err := strconv.Atoi(chapterId)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid chapter ID"})
+        return
+    }
+
+    // Lấy chương hiện tại
+    var currentChapter Models.Chapter
+    if err := database.DB.First(&currentChapter, id).Error; err != nil {
+        if err == gorm.ErrRecordNotFound {
+            c.JSON(http.StatusNotFound, gin.H{"error": "Chapter not found"})
+        } else {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+        }
+        return
+    }
+
+    // Lấy chương trước
+var prevChapter Models.Chapter
+prevChapterURL := ""
+if err := database.DB.
+    Where("book_id = ? AND sort_order < ?", currentChapter.BookID, currentChapter.SortOrder).
+    Order("sort_order DESC").
+    First(&prevChapter).Error; err == nil {
+    prevChapterURL =  strconv.Itoa(int(prevChapter.ID))
+}
+
+// Lấy chương sau
+var nextChapter Models.Chapter
+nextChapterURL := ""
+if err := database.DB.
+    Where("book_id = ? AND sort_order > ?", currentChapter.BookID, currentChapter.SortOrder).
+    Order("sort_order ASC").
+    First(&nextChapter).Error; err == nil {
+    nextChapterURL =  strconv.Itoa(int(nextChapter.ID))
+}
+
+    // Trả dữ liệu
+    c.JSON(http.StatusOK, gin.H{
+        "chapter": map[string]interface{}{
+            "chapter_number": currentChapter.ChapterNumber,
+            "title":          currentChapter.Title,
+            "content_url":    currentChapter.ContentURL,
+        },
+        "prev_chapter": prevChapterURL,
+        "next_chapter": nextChapterURL,
+    })
+}
+
+func UpdateHistory(c *gin.Context) {
+    var req struct {
+        UserID    uint `json:"user_id" binding:"required"`
+        BookID    uint `json:"book_id" binding:"required"`
+        ChapterID uint `json:"chapter_id" binding:"required"`
+    }
+    if err := c.ShouldBindJSON(&req); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    var history Models.History
+    err := database.DB.Where("user_id = ? AND book_id = ?", req.UserID, req.BookID).First(&history).Error
+
+    if err != nil {
+        // Nếu chưa có lịch sử, tạo mới
+        history = Models.History{
+            UserID:       req.UserID,
+            BookID:       req.BookID,
+            ChapterID:    req.ChapterID,
+            LastReadTime: time.Now(),
+        }
+        if err := database.DB.Create(&history).Error; err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+            return
+        }
+    } else {
+        // Nếu đã có, cập nhật
+        history.ChapterID = req.ChapterID
+        history.LastReadTime = time.Now()
+        if err := database.DB.Save(&history).Error; err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+            return
+        }
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "History updated successfully"})
+}

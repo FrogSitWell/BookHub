@@ -8,6 +8,7 @@ type History struct {
     User         User      `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
     BookID       uint      `gorm:"not null"`
     Book         Book      `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
-    LastChapter  int       `gorm:"not null"`
+    ChapterID    uint      `gorm:"not null"` // Thay thế LastChapter
+    Chapter      Chapter   `gorm:"foreignKey:ChapterID;constraint:OnDelete:CASCADE"`
     LastReadTime time.Time `gorm:"autoCreateTime"`
 }

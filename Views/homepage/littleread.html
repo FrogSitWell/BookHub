@@ -57,71 +57,104 @@
     <!-- Nội dung chính -->
     <div class="container">
       <main>
-        <h1 class="title">Mộng Đạo Trường Sinh</h1>
-        <p class="author">Hắc Tâm Lão Ma</p>
-        
         <div class="chapter-navigation">
-            <button class="nav-button prev"><span>&#8592;</span></button>
-            <span class="current-chapter">Chương 01: Chỉ Có Người Chết</span>
-            <button class="nav-button next"><span>&#8594;</span></button>
-        </div>
-        
-        <div class="action-buttons">
-                <i class="fa-solid fa-gear"></i> Cấu hình
-        </div>
-        <div id="configPopup" class="popup">
-            <div class="popup-content">
-                <span class="close" onclick="closePopup()">&times;</span>
-                <h2>Cấu hình</h2>
-                <form id="configForm">
-                    <label for="bgColor">Màu nền trang:</label>
-                    <input type="color" id="bgColor" name="bgColor" value="#ffffff"><br><br>
-        
-                    <label for="textColor">Màu chữ:</label>
-                    <input type="color" id="textColor" name="textColor" value="#000000"><br><br>
-        
-                    <label for="fontFamily">Kiểu chữ:</label>
-                    <select id="fontFamily" name="fontFamily">
-                        <option value="Arial">Arial</option>
-                        <option value="Verdana">Verdana</option>
-                        <option value="Times New Roman">Times New Roman</option>
-                        <option value="Courier New">Courier New</option>
-                    </select><br><br>
-        
-                    <label for="fontSize">Cỡ chữ:</label>
-                    <input type="number" id="fontSize" name="fontSize" min="10" max="50" value="14"><br><br>
-        
-                    <button type="button" onclick="applySettings()">Áp dụng</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="noi-dung">
-            <p>
-                
-
-                
-
-
-                Where does it come from?
-                Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-
-                The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
-            </p>
-        </div>
-
-        <div class="extra-buttons">
-            <button id="prev-btn" class="extra-btn">❮ Chương trước</button>
-            <button id="next-btn" class="extra-btn">Chương sau ❯</button>
-        </div>
+          <span class="current-chapter">Chương đang tải...</span>
+      </div>
+      <div class="noi-dung">
+          <p>Nội dung đang tải...</p>
+      </div>
+      <div class="extra-buttons">
+          <button id="prev-btn" class="extra-btn">❮ Chương trước</button>
+          <button id="next-btn" class="extra-btn">Chương sau ❯</button>
+      </div>
       </main>
     </div>
-  </body>
-  <!-- Link JavaScript -->
+      <!-- Link JavaScript -->
   <script src="/Static/smooth/dropdown.js"></script>
-  <script src="/Static/smooth/reverse-btn.js"></script>
-  <script src="/Static/smooth/nextapre.js"></script>
-  <script src="/Static/smooth/cauhinh.js"></script>
+
+  <script src="/Static/smooth/navuser.js"></script>
+  <script> 
+ // Hàm lấy giá trị `chapterId` từ URL
+const urlParams = new URLSearchParams(window.location.search);
+const chapterId = urlParams.get("id"); // Lấy chapterId từ URL
+
+// Hàm tải chương từ backend
+async function loadChapter(chapterId) {
+    try {
+        // Gửi yêu cầu đến API backend
+        const response = await fetch(`http://localhost:8081/api/chap/${chapterId}`);
+        if (!response.ok) {
+            throw new Error("Không thể tải chương từ backend.");
+        }
+
+        const data = await response.json(); // Parse JSON từ response
+
+        // Cập nhật tiêu đề chương
+        document.querySelector(".current-chapter").textContent = `${data.chapter.title}`;
+
+        // Lấy dữ liệu nội dung từ ContentURL (là URL của nội dung chương)
+        fetch(data.chapter.content_url)
+            .then((response) => response.text()) // Chuyển đổi dữ liệu thành text
+            .then((htmlContent) => {
+                // Xử lý HTML bằng DOMParser để lấy văn bản thuần túy
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlContent, "text/html");
+                const plainText = doc.body.textContent || ""; // Lấy văn bản thuần túy
+
+                // Hiển thị nội dung thuần túy vào phần tử HTML
+                document.querySelector(".noi-dung p").textContent = plainText;
+            })
+            .catch((error) => {
+                console.error("Lỗi khi tải nội dung chương:", error);
+                alert("Không thể tải nội dung chương.");
+            });
+
+
+        // Cập nhật điều hướng (chương trước, chương sau)
+        updateNavigation(data.prev_chapter, data.next_chapter);
+    } catch (error) {
+        console.error("Lỗi khi tải chương:", error);
+        alert("Đã xảy ra lỗi khi tải chương!");
+    }
+}
+
+
+// Hàm cập nhật nút điều hướng
+function updateNavigation(prevChapter, nextChapter) {
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+
+    // Xử lý nút "Chương trước"
+    if (prevChapter) {
+        prevBtn.disabled = false;
+        prevBtn.onclick = () => window.location.href = `?id=${prevChapter}`;
+    } else {
+        prevBtn.disabled = true;
+    }
+
+    // Xử lý nút "Chương sau"
+    if (nextChapter) {
+        nextBtn.disabled = false;
+        nextBtn.onclick = () => window.location.href = `?id=${nextChapter}`;
+    } else {
+        nextBtn.disabled = true;
+    }
+}
+
+// Khi trang được tải
+document.addEventListener("DOMContentLoaded", () => {
+    if (chapterId) {
+        loadChapter(chapterId); // Tải dữ liệu chương
+    } else {
+        alert("Không tìm thấy `chapterId` trong URL!");
+    }
+});
+
+
+
+  </script>
+  </body>
+
   <!-- Footer -->
   <footer>
     <div class="footer-content">

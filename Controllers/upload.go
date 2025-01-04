@@ -11,7 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 func CreateBookWithAvatar(c *gin.Context) {
-	
 	// 1. Lấy thông tin từ request
 	name := c.PostForm("name")
 	description := c.PostForm("description")
@@ -21,6 +20,7 @@ func CreateBookWithAvatar(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid genre ID"})
 		return
 	}
+
 	// Lấy userID từ context (được gán trong middleware TokenAuthMiddleware)
 	userIDRaw := c.MustGet("userID")
 	userID, ok := userIDRaw.(string)
@@ -29,16 +29,28 @@ func CreateBookWithAvatar(c *gin.Context) {
 		return
 	}
 
-	// Chuyển đổi sang uint nếu cần
+	// Chuyển đổi userID từ string sang uint
 	userIDInt, err := strconv.Atoi(userID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
 		return
 	}
+
 	// Kiểm tra xem userID có tồn tại trong bảng users không
 	var user Models.User
 	if err := database.DB.First(&user, userID).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	// Lấy status_id từ form, mặc định là 1 nếu không được cung cấp
+	statusID := c.PostForm("statusid")
+	if statusID == "" {
+		statusID = "1" // Mặc định là 1
+	}
+	statusIDInt, err := strconv.Atoi(statusID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid status ID"})
 		return
 	}
 
@@ -51,11 +63,13 @@ func CreateBookWithAvatar(c *gin.Context) {
 
 	// 2. Lưu thông tin sách vào cơ sở dữ liệu
 	book := Models.Book{
-		Name:        name, 
-		Description: description,
-		Author:      author,
-		GenreID:     uint(genreID), // Chuyển đổi genreID thành uint
-		UserID:      uint(userIDInt),
+		Name:         name,
+		Description:  description,
+		Author:       author,
+		GenreID:      uint(genreID),
+		StatusID:     uint(statusIDInt),
+		UserID:       uint(userIDInt),
+		TotalChapters: 0, // Mặc định là 0
 	}
 	if err := database.DB.Create(&book).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create book"})

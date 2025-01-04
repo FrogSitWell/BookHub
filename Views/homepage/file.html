@@ -131,7 +131,10 @@
                     <p class="book-description">${book.Description}</p>
                     <div class="book-actions">
                         <span class="book-genre">Thể loại: ${book.Genre ? book.Genre.Name : 'Không xác định'}</span>
-                        <button class="read-button">Đọc thử</button>
+                        <button class="read-button" 
+                onclick="window.location.href='http://127.0.0.1:5500/Views/homepage/read.html?id=${encodeURIComponent(book.ID)}'">
+          Đọc thử
+        </button>
                     </div>
                 </div>
 

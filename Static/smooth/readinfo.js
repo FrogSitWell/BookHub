@@ -128,7 +128,9 @@ function loadTopChapters(bookID) {
         data.chapters.forEach((chapter) => {
           const row = document.createElement("tr");
           const cell = document.createElement("td");
-          cell.innerHTML = `<a href="#">${chapter.Title}</a>`;
+          cell.innerHTML = `<a href="http://127.0.0.1:5500/Views/homepage/littleread.html?id=${encodeURIComponent(
+            chapter.ID
+          )}">${chapter.Title}</a>`;
           row.appendChild(cell);
           chaptersDiv.appendChild(row);
         });
@@ -168,7 +170,9 @@ function loadAllChapters(bookID) {
         data.chapters.forEach((chapter) => {
           const row = document.createElement("tr");
           const cell = document.createElement("td");
-          cell.innerHTML = `<a href="#">${chapter.Title}</a>`;
+          cell.innerHTML = `<a href="http://127.0.0.1:5500/Views/homepage/littleread.html?id=${encodeURIComponent(
+            chapter.ID
+          )}">${chapter.Title}</a>`;
           row.appendChild(cell);
           chaptersDiv.appendChild(row);
         });

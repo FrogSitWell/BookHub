@@ -45,6 +45,8 @@ func SetupRoutes(r *gin.Engine) {
 		api.GET("/description/:id", Controllers.GetBookDescriptionByID)//lấy mô tả sách 
 		api.GET("/newchapter/:id", Controllers.GetTopChapters)
 		api.GET("/allchapter/:id", Controllers.GetAllChapters)
+		api.GET("/chap/:chapterId", Controllers.GetNewChapter)
+		api.POST("/history", Controllers.UpdateHistory)
 	}
 	
 
