@@ -6,4 +6,4 @@
 
 # Author screen
 
-# Reader 
+# Reader screen
